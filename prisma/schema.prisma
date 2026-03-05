@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../prisma/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id String @id @default(uuid())
+
+  firstName      String  @map("first_name")
+  lastName       String? @map("last_name")
+  username       String  @unique
+  password       String  @db.Text
+  avatarImageURL String? @map("avatar_image_url") @db.Text
+
+  posts Post[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Post {
+  id String @id @default(uuid())
+
+  title         String
+  slug          String  @unique
+  content       String  @db.Text
+  coverImageURL String? @map("cover_image_url") @db.Text
+
+  author     User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   String     @map("author_id")
+  categories Category[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([authorId])
+  @@index([createdAt])
+  @@map("posts")
+}
+
+model Category {
+  id String @id @default(uuid())
+
+  name String @unique
+  slug String @unique
+
+  posts Post[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("categories")
+}
