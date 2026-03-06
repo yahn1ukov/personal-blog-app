@@ -1,6 +1,10 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Prisma, PrismaClient } from "~~/prisma/generated/client";
-import { AppError, BadRequestError, ConflictError, InternalServerError, NotFoundError } from "./errors";
+import { BadRequestError } from "~~/shared/errors/bad-request.error";
+import { BaseError } from "~~/shared/errors/base.error";
+import { ConflictError } from "~~/shared/errors/conflict.error";
+import { InternalServerError } from "~~/shared/errors/internal-server.error";
+import { NotFoundError } from "~~/shared/errors/not-found.error";
 
 function prismaClientSingleton() {
   const pool = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
@@ -20,7 +24,7 @@ if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
 
-export function handlePrismaError(error: unknown, entity: string = "Entity"): AppError {
+export function handlePrismaError(error: unknown, entity: string = "Entity"): BaseError {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     switch (error.code) {
       case "P2002":

@@ -1,5 +1,6 @@
 import * as jose from "jose";
-import { InvalidTokenError, TokenExpiredError } from "../../errors";
+import { InvalidTokenError } from "~~/shared/errors/invalid-token.error";
+import { TokenExpiredError } from "~~/shared/errors/token-expired.error";
 import type { JwtPayload } from "../../types/auth.type";
 
 function getJwtSecret() {
