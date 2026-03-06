@@ -18,6 +18,12 @@ class FileService {
     return objectName;
   }
 
+  async remove(objectName: string): Promise<void> {
+    return minioClient.removeObject(getS3Bucket(), objectName).catch(() => {
+      throw new InternalServerError("Failed to remove image");
+    });
+  }
+
   private generateObjectName(userId: string, type: FileType, filename: string): string {
     const timestamp = Date.now();
 

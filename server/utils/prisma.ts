@@ -38,9 +38,7 @@ export function handlePrismaError(error: unknown, entity: string = "Entity"): Ap
 }
 
 export async function withPrismaErrorHandling<T>(entity: string, fn: () => Promise<T>): Promise<T> {
-  try {
-    return await fn();
-  } catch (error: unknown) {
+  return fn().catch((error: unknown) => {
     throw handlePrismaError(error, entity);
-  }
+  });
 }
