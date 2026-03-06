@@ -1,9 +1,9 @@
-import type { PostDto } from "~~/server/dto/post.dto";
+import type { PostDto } from "~~/shared/dto/post.dto";
 import { formatDateToISO, formatImageURL } from "../formatters";
-import type { PostWithRelations } from "../types/post.type";
+import type { PostWithRelationsPayload } from "../types/post.type";
 
 export class PostMapper {
-  static toDetailDto(post: PostWithRelations): PostDto {
+  static toDetailDto(post: PostWithRelationsPayload): PostDto {
     return {
       id: post.id,
       title: post.title,
@@ -23,7 +23,7 @@ export class PostMapper {
     };
   }
 
-  static toPreviewDto(post: PostWithRelations): Omit<PostDto, "author"> {
+  static toPreviewDto(post: PostWithRelationsPayload): Omit<PostDto, "author"> {
     const { author: _, ...preview } = this.toDetailDto(post);
     return preview;
   }

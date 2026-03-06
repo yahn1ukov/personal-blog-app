@@ -1,4 +1,4 @@
-import type { UpdatePasswordRequestDto, UpdateUserRequestDto } from "../dto/user.dto";
+import type { UpdatePasswordRequestDto, UpdateUserRequestDto } from "~~/shared/dto/user.dto";
 import { userRepository } from "../repositories/user.repository";
 import { FILE_TYPE } from "../utils/constants/file.constant";
 import { BadRequestError } from "../utils/errors";

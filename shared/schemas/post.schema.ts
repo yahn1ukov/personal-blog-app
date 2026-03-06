@@ -1,13 +1,16 @@
 import { z } from "zod";
 import { CreateCategoryBodySchema, UpdateCategoryBodySchema } from "./category.schema";
 
+const postTitleField = z.string();
+const postContentField = z.string();
+
 const PostParamsSchema = z.object({
   id: z.string(),
 });
 
 export const CreatePostBodySchema = z.object({
-  title: z.string(),
-  content: z.string(),
+  title: postTitleField,
+  content: postContentField,
   categories: z.array(CreateCategoryBodySchema).min(1),
 });
 
@@ -24,8 +27,8 @@ export const GetPostParamsSchema = PostParamsSchema;
 export const UpdatePostParamsSchema = PostParamsSchema;
 
 export const UpdatePostBodySchema = z.object({
-  title: z.string().optional(),
-  content: z.string().optional(),
+  title: postTitleField.optional(),
+  content: postContentField.optional(),
   categories: z.array(UpdateCategoryBodySchema).min(1).optional(),
 });
 

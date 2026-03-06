@@ -1,13 +1,6 @@
 import { Prisma } from "~~/prisma/generated/client";
 
-export interface CreateUserPayload {
-  firstName: string;
-  lastName?: string;
-  username: string;
-  password: string;
-}
-
-export type User = Prisma.UserGetPayload<{
+export type UserPayload = Prisma.UserGetPayload<{
   select: {
     id: true;
     firstName: true;
@@ -18,9 +11,16 @@ export type User = Prisma.UserGetPayload<{
   };
 }>;
 
-export type UserWithPassword = Pick<User, "id"> & {
+export type UserWithPasswordPayload = Pick<UserPayload, "id"> & {
   password: string;
 };
+
+export interface CreateUserPayload {
+  firstName: string;
+  lastName?: string;
+  username: string;
+  password: string;
+}
 
 export type UpdateUserPayload = Partial<
   Omit<CreateUserPayload, "password"> & {

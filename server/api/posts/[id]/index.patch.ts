@@ -1,7 +1,7 @@
-import { postService } from "~~/server/services/post.service";
-import { defineProtectedController } from "~~/server/utils/http/auth/protected-controller";
-import { validateMultipartFormData, validateParams } from "~~/server/utils/http/validation";
-import { UpdatePostBodySchema, UpdatePostParamsSchema } from "~~/server/utils/schemas/post.schema";
+import { UpdatePostBodySchema, UpdatePostParamsSchema } from "~~/shared/schemas/post.schema";
+import { postService } from "../../../services/post.service";
+import { defineProtectedController } from "../../../utils/http/auth/protected-controller";
+import { validateMultipartFormData, validateParams } from "../../../utils/http/validation";
 
 export default defineProtectedController(async (event) => {
   const [params, body] = await Promise.all([

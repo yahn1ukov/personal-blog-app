@@ -1,6 +1,6 @@
 import { Prisma } from "~~/prisma/generated/client";
 import { prisma, withPrismaErrorHandling } from "../utils/prisma";
-import type { CreatePostPayload, PostWithRelations, UpdatePostPayload } from "../utils/types/post.type";
+import type { CreatePostPayload, PostWithRelationsPayload, UpdatePostPayload } from "../utils/types/post.type";
 
 class PostRepository {
   private readonly selectOptions = {
@@ -50,7 +50,7 @@ class PostRepository {
     offset: number,
     limit: number,
     categories?: string[],
-  ): Promise<{ count: number; posts: PostWithRelations[] }> {
+  ): Promise<{ count: number; posts: PostWithRelationsPayload[] }> {
     const where: Prisma.PostWhereInput = {};
     if (categories?.length) {
       where.categories = { some: { slug: { in: categories } } };
@@ -70,7 +70,7 @@ class PostRepository {
     return { count, posts };
   }
 
-  async getByIdOrSlug(idOrSlug: string): Promise<PostWithRelations> {
+  async getByIdOrSlug(idOrSlug: string): Promise<PostWithRelationsPayload> {
     return withPrismaErrorHandling("Post", () =>
       prisma.post.findFirstOrThrow({
         where: { OR: [{ id: idOrSlug }, { slug: idOrSlug }] },

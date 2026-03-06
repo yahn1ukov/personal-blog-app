@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { UpdateUserBodySchema, UpdateUserPasswordBodySchema } from "../utils/schemas/user.schema";
+import { UpdateUserBodySchema, UpdateUserPasswordBodySchema } from "../schemas/user.schema";
+import type { FileMetadata } from "../types/file.type";
 
 export interface UserDto {
   id: string;

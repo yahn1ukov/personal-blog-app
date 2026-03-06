@@ -1,7 +1,7 @@
-import { postService } from "~~/server/services/post.service";
-import { defineProtectedController } from "~~/server/utils/http/auth/protected-controller";
-import { validateParams } from "~~/server/utils/http/validation";
-import { DeletePostParamsSchema } from "~~/server/utils/schemas/post.schema";
+import { DeletePostParamsSchema } from "~~/shared/schemas/post.schema";
+import { postService } from "../../../services/post.service";
+import { defineProtectedController } from "../../../utils/http/auth/protected-controller";
+import { validateParams } from "../../../utils/http/validation";
 
 export default defineProtectedController(async (event) => {
   const params = await validateParams(event, DeletePostParamsSchema);

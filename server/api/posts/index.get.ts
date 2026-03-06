@@ -1,7 +1,7 @@
-import { postService } from "~~/server/services/post.service";
-import { defineController } from "~~/server/utils/http/controller";
-import { validateQuery } from "~~/server/utils/http/validation";
-import { GetPostsQuerySchema } from "~~/server/utils/schemas/post.schema";
+import { GetPostsQuerySchema } from "~~/shared/schemas/post.schema";
+import { postService } from "../../services/post.service";
+import { defineController } from "../../utils/http/controller";
+import { validateQuery } from "../../utils/http/validation";
 
 export default defineController(async (event) => {
   const query = await validateQuery(event, GetPostsQuerySchema);

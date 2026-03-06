@@ -1,5 +1,10 @@
 import { prisma, withPrismaErrorHandling } from "../utils/prisma";
-import type { CreateUserPayload, UpdateUserPayload, User, UserWithPassword } from "../utils/types/user.type";
+import type {
+  CreateUserPayload,
+  UpdateUserPayload,
+  UserPayload,
+  UserWithPasswordPayload,
+} from "../utils/types/user.type";
 
 class UserRepository {
   private readonly selectOptions = {
@@ -11,7 +16,7 @@ class UserRepository {
     createdAt: true,
   };
 
-  async findByIdOrUsername(idOrUsername: string): Promise<UserWithPassword | null> {
+  async findByIdOrUsername(idOrUsername: string): Promise<UserWithPasswordPayload | null> {
     return prisma.user.findFirst({
       where: { OR: [{ id: idOrUsername }, { username: idOrUsername }] },
       select: {
@@ -21,7 +26,7 @@ class UserRepository {
     });
   }
 
-  async create(payload: CreateUserPayload): Promise<Pick<UserWithPassword, "id">> {
+  async create(payload: CreateUserPayload): Promise<Pick<UserWithPasswordPayload, "id">> {
     return withPrismaErrorHandling("User", () =>
       prisma.user.create({
         data: payload,
@@ -30,7 +35,7 @@ class UserRepository {
     );
   }
 
-  async getByIdOrUsername(idOrUsername: string): Promise<User> {
+  async getByIdOrUsername(idOrUsername: string): Promise<UserPayload> {
     return withPrismaErrorHandling("User", () =>
       prisma.user.findFirstOrThrow({
         where: { OR: [{ id: idOrUsername }, { username: idOrUsername }] },

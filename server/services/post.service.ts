@@ -4,7 +4,7 @@ import type {
   GetPostsQueryDto,
   GetPostsResponseDto,
   UpdatePostRequestDto,
-} from "../dto/post.dto";
+} from "~~/shared/dto/post.dto";
 import { postRepository } from "../repositories/post.repository";
 import { FILE_TYPE } from "../utils/constants/file.constant";
 import { formatSlug } from "../utils/formatters";

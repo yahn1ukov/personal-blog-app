@@ -15,7 +15,7 @@ export type UpdatePostPayload = Partial<
   }
 >;
 
-export type PostWithRelations = Prisma.PostGetPayload<{
+export type PostWithRelationsPayload = Prisma.PostGetPayload<{
   select: {
     id: true;
     title: true;

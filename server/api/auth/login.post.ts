@@ -1,8 +1,8 @@
-import { authService } from "~~/server/services/auth.service";
-import { setAuthCookie } from "~~/server/utils/http/auth/cookie";
-import { defineController } from "~~/server/utils/http/controller";
-import { validateBody } from "~~/server/utils/http/validation";
-import { LoginBodySchema } from "~~/server/utils/schemas/auth.schema";
+import { LoginBodySchema } from "~~/shared/schemas/auth.schema";
+import { authService } from "../../services/auth.service";
+import { setAuthCookie } from "../../utils/http/auth/cookie";
+import { defineController } from "../../utils/http/controller";
+import { validateBody } from "../../utils/http/validation";
 
 export default defineController(async (event) => {
   const body = await validateBody(event, LoginBodySchema);

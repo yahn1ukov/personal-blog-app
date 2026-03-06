@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { CreatePostBodySchema } from "../utils/schemas/post.schema";
-import type { FileMetadata } from "../utils/types/file.type";
+import { CreatePostBodySchema } from "../schemas/post.schema";
+import type { FileMetadata } from "../types/file.type";
 import type { CategoryDto } from "./category.dto";
 import type { UserDto } from "./user.dto";
 

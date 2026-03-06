@@ -1,9 +1,9 @@
-import type { GetAuthUserResponseDto } from "~~/server/dto/auth.dto";
+import type { GetAuthUserResponseDto } from "~~/shared/dto/auth.dto";
 import { formatImageURL } from "../formatters";
-import type { User } from "../types/user.type";
+import type { UserPayload } from "../types/user.type";
 
 export class AuthMapper {
-  static toDto(user: User): GetAuthUserResponseDto {
+  static toDto(user: UserPayload): GetAuthUserResponseDto {
     return {
       username: user.username,
       avatarImageURL: formatImageURL(user.avatarImageURL),

@@ -1,5 +1,5 @@
 import { prisma } from "../utils/prisma";
-import type { Category } from "../utils/types/category.type";
+import type { CategoryPayload } from "../utils/types/category.type";
 
 class CategoryRepository {
   private readonly selectOptions = {
@@ -7,7 +7,7 @@ class CategoryRepository {
     slug: true,
   };
 
-  async getAll(): Promise<Category[]> {
+  async getAll(): Promise<CategoryPayload[]> {
     return prisma.category.findMany({
       select: this.selectOptions,
     });
