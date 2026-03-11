@@ -1,9 +1,9 @@
 import type { PostDto } from "~~/shared/dto/post.dto";
-import { formatDateToISO, formatImageURL } from "../formatters";
+import { formatImageURL } from "../formatters";
 import type { PostWithRelationsPayload } from "../types/post.type";
 
 export class PostMapper {
-  static toDetailDto(post: PostWithRelationsPayload): PostDto {
+  static toDto(post: PostWithRelationsPayload): PostDto {
     return {
       id: post.id,
       title: post.title,
@@ -13,18 +13,14 @@ export class PostMapper {
       author: {
         firstName: post.author.firstName,
         lastName: post.author.lastName,
+        username: post.author.username,
         avatarImageURL: formatImageURL(post.author.avatarImageURL),
       },
       categories: post.categories.map((category) => ({
         name: category.name,
         slug: category.slug,
       })),
-      createdAt: formatDateToISO(post.createdAt),
+      createdAt: post.createdAt,
     };
-  }
-
-  static toPreviewDto(post: PostWithRelationsPayload): Omit<PostDto, "author"> {
-    const { author: _, ...preview } = this.toDetailDto(post);
-    return preview;
   }
 }

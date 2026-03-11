@@ -9,10 +9,6 @@ export function formatSlug(value: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-export function formatDateToISO(date: Date): string {
-  return date.toISOString();
-}
-
 export function formatImageURL(imageURL: string | null): string | null {
   return imageURL && `${getS3URL()}/${imageURL}`;
 }

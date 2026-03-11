@@ -10,9 +10,9 @@ export interface PostDto {
   slug: string;
   content: string;
   coverImageURL: string | null;
-  author: Omit<UserDto, "id" | "username" | "createdAt">;
+  author: Omit<UserDto, "id" | "createdAt">;
   categories: CategoryDto[];
-  createdAt: string;
+  createdAt: Date;
 }
 
 export interface GetPostsQueryDto {
@@ -21,15 +21,11 @@ export interface GetPostsQueryDto {
   categories?: string[];
 }
 
-export interface GetPostsResponseDto {
-  total: number;
-  pages: number;
-  posts: Omit<PostDto, "author">[];
-}
-
 export type CreatePostRequestDto = z.infer<typeof CreatePostBodySchema> & {
   coverImage?: FileMetadata;
 };
+
+export type GetPostsResponseDto = PostDto[];
 
 export type GetPostResponseDto = PostDto;
 

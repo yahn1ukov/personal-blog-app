@@ -1,5 +1,6 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
+  modules: ["@pinia/nuxt", "@nuxtjs/tailwindcss", "@nuxt/icon", "@vueuse/nuxt"],
   devtools: {
     enabled: process.env.NODE_ENV === "development",
   },
@@ -27,5 +28,15 @@ export default defineNuxtConfig({
     s3Bucket: process.env.S3_BUCKET || "",
     s3Region: process.env.S3_REGION || "",
     s3UseSSL: process.env.MINIO_USE_SSL === "true",
+  },
+  routeRules: {
+    "/api/**": {
+      cors: true,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Origin, Content-Type, Accept, Authorization",
+      },
+    },
   },
 });

@@ -7,4 +7,18 @@ export default defineNitroPlugin(async () => {
   if (!bucketExists) {
     await minioClient.makeBucket(config.s3Bucket, config.s3Region);
   }
+
+  const policy = {
+    Version: "2012-10-17",
+    Statement: [
+      {
+        Effect: "Allow",
+        Principal: { AWS: ["*"] },
+        Action: ["s3:GetObject"],
+        Resource: [`arn:aws:s3:::${config.s3Bucket}/*`],
+      },
+    ],
+  };
+
+  await minioClient.setBucketPolicy(config.s3Bucket, JSON.stringify(policy));
 });

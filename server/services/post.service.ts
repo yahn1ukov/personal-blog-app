@@ -33,20 +33,15 @@ class PostService {
 
     const offset = (page - 1) * limit;
 
-    const { count, posts } = await postRepository.getAll(offset, limit, categories);
-    const pages = Math.ceil(count / limit);
+    const posts = await postRepository.getAll(offset, limit, categories);
 
-    return {
-      total: count,
-      pages,
-      posts: posts.map((post) => PostMapper.toPreviewDto(post)),
-    };
+    return posts.map((post) => PostMapper.toDto(post));
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<GetPostResponseDto> {
     const post = await postRepository.getByIdOrSlug(idOrSlug);
 
-    return PostMapper.toDetailDto(post);
+    return PostMapper.toDto(post);
   }
 
   async updateById(id: string, authorId: string, dto: UpdatePostRequestDto): Promise<void> {

@@ -27,6 +27,7 @@ export type PostWithRelationsPayload = Prisma.PostGetPayload<{
       select: {
         firstName: true;
         lastName: true;
+        username: true;
         avatarImageURL: true;
       };
     };

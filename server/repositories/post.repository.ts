@@ -14,6 +14,7 @@ class PostRepository {
       select: {
         firstName: true,
         lastName: true,
+        username: true,
         avatarImageURL: true,
       },
     },
@@ -46,28 +47,19 @@ class PostRepository {
     );
   }
 
-  async getAll(
-    offset: number,
-    limit: number,
-    categories?: string[],
-  ): Promise<{ count: number; posts: PostWithRelationsPayload[] }> {
+  async getAll(offset: number, limit: number, categories?: string[]): Promise<PostWithRelationsPayload[]> {
     const where: Prisma.PostWhereInput = {};
     if (categories?.length) {
       where.categories = { some: { slug: { in: categories } } };
     }
 
-    const [count, posts] = await Promise.all([
-      prisma.post.count({ where }),
-      prisma.post.findMany({
-        where,
-        take: limit,
-        skip: offset,
-        select: this.selectOptions,
-        orderBy: { createdAt: "desc" },
-      }),
-    ]);
-
-    return { count, posts };
+    return prisma.post.findMany({
+      where,
+      take: limit,
+      skip: offset,
+      select: this.selectOptions,
+      orderBy: { createdAt: "desc" },
+    });
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<PostWithRelationsPayload> {
