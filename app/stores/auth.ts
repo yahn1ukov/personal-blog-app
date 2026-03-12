@@ -9,15 +9,14 @@ export const useAuthStore = defineStore(PINIA_STORE_KEY.AUTH, () => {
     error: null,
   });
 
-  const isAuthenticated = computed(() => !!currentUser.value);
-
   async function getCurrentUser() {
     state.isLoading = true;
     state.error = null;
 
     try {
       if (import.meta.server) {
-        const token = useCookie("Authorization");
+        const { jwtCookieName } = useRuntimeConfig();
+        const token = useCookie(jwtCookieName);
         if (!token.value) {
           currentUser.value = null;
           return;
@@ -31,8 +30,7 @@ export const useAuthStore = defineStore(PINIA_STORE_KEY.AUTH, () => {
       });
 
       currentUser.value = data;
-    } catch (error: unknown) {
-      console.error(error);
+    } catch {
       currentUser.value = null;
     } finally {
       state.isLoading = false;
@@ -41,55 +39,38 @@ export const useAuthStore = defineStore(PINIA_STORE_KEY.AUTH, () => {
   }
 
   async function login(dto: LoginRequestDto) {
-    const data = await withRequestState(state, async () => {
-      await $fetch("/api/auth/login", {
-        method: "POST",
-        body: dto,
-      });
-
-      return true;
-    });
-
-    if (data) {
+    const result = await withRequestState(state, () => $fetch("/api/auth/login", { method: "POST", body: dto }));
+    if (result.ok) {
       await getCurrentUser();
     }
   }
 
   async function register(dto: RegisterRequestDto) {
-    const data = await withRequestState(state, async () => {
-      await $fetch("/api/auth/register", {
-        method: "POST",
-        body: dto,
-      });
-
-      return true;
-    });
-
-    if (data) {
+    const result = await withRequestState(state, () => $fetch("/api/auth/register", { method: "POST", body: dto }));
+    if (result.ok) {
       await getCurrentUser();
     }
   }
 
   async function logout() {
-    const data = await withRequestState(state, async () => {
-      await $fetch("/api/auth/logout", { method: "POST" });
-
-      return true;
-    });
-
-    if (data) {
+    const result = await withRequestState(state, () => $fetch("/api/auth/logout", { method: "POST" }));
+    if (result.ok) {
       currentUser.value = null;
     }
+  }
+
+  function clearError() {
+    state.error = null;
   }
 
   return {
     state,
     isAuthPluginInitialized,
-    isAuthenticated,
     currentUser,
     getCurrentUser,
     login,
     register,
     logout,
+    clearError,
   };
 });

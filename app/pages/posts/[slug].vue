@@ -3,19 +3,23 @@ const route = useRoute();
 
 const store = usePostStore();
 const { post, state } = storeToRefs(store);
-const { getByIdOrSlug } = store;
 
-watch(
-  () => route.params.slug,
-  async (slug) => await getByIdOrSlug(slug as string),
-  { immediate: true },
+await useAsyncData(
+  () => `post-${route.params.slug}`,
+  () => store.getByIdOrSlug(route.params.slug as string),
+  { watch: [() => route.params.slug] },
 );
 
-const formattedCreatedAt = useDateFormat(post.value?.createdAt, "DD.MM.YYYY HH:MM");
+const formattedCreatedAt = useDateFormat(
+  computed(() => post.value?.createdAt),
+  "DD.MM.YYYY HH:mm",
+);
 </script>
 
 <template>
-  <p v-if="state.isLoading" class="text-sm text-black/60">Loading...</p>
+  <AppMessage v-if="state.isLoading" message="Loading..." />
+
+  <AppMessage v-else-if="state.error" :message="state.error.message" :type="MESSAGE_TYPE.ERROR" />
 
   <div v-else-if="post" class="flex flex-col gap-6">
     <AppBanner v-if="post.coverImageURL" :src="post.coverImageURL" :alt="post.slug" class="h-52 rounded-md" />
@@ -24,7 +28,7 @@ const formattedCreatedAt = useDateFormat(post.value?.createdAt, "DD.MM.YYYY HH:M
 
     <AppUser
       :user="post.author"
-      :style="{ avatar: 'size-12', fullName: 'text-lg', username: 'text-black/50' }"
+      :styles="{ avatar: 'size-12', fullName: 'text-lg', username: 'text-black/50' }"
       show-full-name
     />
 

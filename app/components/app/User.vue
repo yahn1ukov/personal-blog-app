@@ -8,7 +8,7 @@ interface UserProps {
   avatarImageURL: string | null;
 }
 
-interface StyleProps {
+interface StylesProps {
   avatar?: string;
   fullName?: string;
   username?: string;
@@ -16,7 +16,7 @@ interface StyleProps {
 
 interface Props {
   user: UserProps;
-  style?: StyleProps;
+  styles?: StylesProps;
   showFullName?: boolean;
 }
 
@@ -31,12 +31,12 @@ const fullName = computed(() => {
   <div class="inline-flex items-center gap-2 min-w-0">
     <img
       :src="user.avatarImageURL ?? defaultAvatarImage"
-      :class="[props.style?.avatar, 'rounded-full object-cover']"
+      :class="[props.styles?.avatar, 'rounded-full object-cover']"
       :alt="user.username"
     />
     <div class="flex flex-col min-w-0">
-      <span v-if="props.showFullName" :class="[props.style?.fullName, 'font-medium truncate']">{{ fullName }}</span>
-      <span :class="[props.style?.username, 'truncate']">@{{ user.username }}</span>
+      <span v-if="props.showFullName" :class="[props.styles?.fullName, 'font-medium truncate']">{{ fullName }}</span>
+      <span :class="[props.styles?.username, 'truncate']">@{{ user.username }}</span>
     </div>
   </div>
 </template>

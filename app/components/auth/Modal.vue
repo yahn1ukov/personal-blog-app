@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import type { AuthTabType } from "@/types/auth";
+import type { AuthTabType } from "@/utils/types";
 import type { LoginRequestDto, RegisterRequestDto } from "~~/shared/dto/auth.dto";
 
 const isOpen = defineModel<boolean>({ required: true });
 
 const store = useAuthStore();
-const { state: authState, isAuthenticated } = storeToRefs(store);
-const { login, register } = store;
+const { state, currentUser } = storeToRefs(store);
+const { login, register, clearError } = store;
 
 const activeTab = ref<AuthTabType>(AUTH_TAB_TYPE.LOGIN);
-const state = reactive<LoginRequestDto & RegisterRequestDto>({
+
+const formState = reactive<LoginRequestDto & RegisterRequestDto>({
   firstName: "",
   lastName: "",
   username: "",
@@ -18,25 +19,28 @@ const state = reactive<LoginRequestDto & RegisterRequestDto>({
 
 const title = computed(() => (activeTab.value === AUTH_TAB_TYPE.LOGIN ? "Login" : "Register"));
 
-function resetForm() {
-  state.firstName = "";
-  state.lastName = "";
-  state.username = "";
-  state.password = "";
+function handleTabChange(tab: AuthTabType) {
+  activeTab.value = tab;
+  clearError();
 }
 
-watch(
-  () => isOpen.value,
-  (opened) => {
-    if (!opened) {
-      activeTab.value = AUTH_TAB_TYPE.LOGIN;
-      resetForm();
-    }
-  },
-);
+function resetForm() {
+  formState.firstName = "";
+  formState.lastName = "";
+  formState.username = "";
+  formState.password = "";
+}
 
-watch(isAuthenticated, (value) => {
-  if (value && isOpen.value) {
+watch(isOpen, (opened) => {
+  if (!opened) {
+    activeTab.value = AUTH_TAB_TYPE.LOGIN;
+    clearError();
+    resetForm();
+  }
+});
+
+watch(currentUser, (user) => {
+  if (user && isOpen.value) {
     isOpen.value = false;
   }
 });
@@ -44,24 +48,24 @@ watch(isAuthenticated, (value) => {
 async function submit() {
   if (activeTab.value === AUTH_TAB_TYPE.LOGIN) {
     await login({
-      username: state.username,
-      password: state.password,
+      username: formState.username,
+      password: formState.password,
     });
     return;
   }
 
-  await register(state);
+  await register(formState);
 }
 </script>
 
 <template>
   <AppModal v-model="isOpen" :title="title">
-    <AppButtonGroup class="flex w-full">
+    <AppButtonGroup class="w-full">
       <AppButton
         type="button"
         class="flex-1"
         :class="activeTab === AUTH_TAB_TYPE.LOGIN ? 'bg-black text-white' : 'bg-white text-black'"
-        @click="activeTab = AUTH_TAB_TYPE.LOGIN"
+        @click="handleTabChange(AUTH_TAB_TYPE.LOGIN)"
       >
         Login
       </AppButton>
@@ -69,11 +73,13 @@ async function submit() {
         type="button"
         class="flex-1"
         :class="activeTab === AUTH_TAB_TYPE.REGISTER ? 'bg-black text-white' : 'bg-white text-black'"
-        @click="activeTab = AUTH_TAB_TYPE.REGISTER"
+        @click="handleTabChange(AUTH_TAB_TYPE.REGISTER)"
       >
         Register
       </AppButton>
     </AppButtonGroup>
+
+    <AppMessage v-if="state.error" :message="state.error.message" :type="MESSAGE_TYPE.ERROR" />
 
     <form class="flex flex-col gap-3" @submit.prevent="submit">
       <template v-if="activeTab === AUTH_TAB_TYPE.REGISTER">
@@ -81,7 +87,7 @@ async function submit() {
           <label for="firstName" class="text-sm font-medium">First Name</label>
           <input
             id="firstName"
-            v-model="state.firstName"
+            v-model="formState.firstName"
             type="text"
             class="rounded-md border border-black px-3 py-2 text-sm outline-none"
           />
@@ -94,7 +100,7 @@ async function submit() {
           </div>
           <input
             id="lastName"
-            v-model="state.lastName"
+            v-model="formState.lastName"
             type="text"
             class="rounded-md border border-black px-3 py-2 text-sm outline-none"
           />
@@ -105,9 +111,8 @@ async function submit() {
         <label for="username" class="text-sm font-medium">Username</label>
         <input
           id="username"
-          v-model="state.username"
+          v-model="formState.username"
           type="text"
-          autocomplete="username"
           class="rounded-md border border-black px-3 py-2 text-sm outline-none"
         />
       </div>
@@ -116,14 +121,13 @@ async function submit() {
         <label for="password" class="text-sm font-medium">Password</label>
         <input
           id="password"
-          v-model="state.password"
+          v-model="formState.password"
           type="password"
-          autocomplete="current-password"
           class="rounded-md border border-black px-3 py-2 text-sm outline-none"
         />
       </div>
 
-      <AppButton type="submit" :loading="authState.isLoading" class="self-start">
+      <AppButton type="submit" :loading="state.isLoading" class="self-start">
         {{ activeTab === AUTH_TAB_TYPE.LOGIN ? "Login" : "Register" }}
       </AppButton>
     </form>

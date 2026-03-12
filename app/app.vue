@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex flex-col">
-    <header class="h-[60px]">
+    <header class="h-15">
       <AppContainer>
         <AppNavbar />
       </AppContainer>

@@ -7,3 +7,9 @@ export const AUTH_TAB_TYPE = {
   LOGIN: "login",
   REGISTER: "register",
 } as const;
+
+export const MESSAGE_TYPE = {
+  INFO: "info",
+  SUCCESS: "success",
+  ERROR: "error",
+} as const;

@@ -2,14 +2,13 @@
 const store = usePostStore();
 const { posts, state } = storeToRefs(store);
 
-await useAsyncData("posts-index", async () => {
-  await store.getAll({});
-  return true;
-});
+await useAsyncData("posts-index", () => store.getAll({}));
 </script>
 
 <template>
-  <p v-if="state.isLoading" class="text-sm text-black/60">Loading...</p>
+  <AppMessage v-if="state.isLoading" message="Loading..." />
+
+  <AppMessage v-else-if="state.error" :message="state.error.message" :type="MESSAGE_TYPE.ERROR" />
 
   <PostList v-else :posts />
 </template>

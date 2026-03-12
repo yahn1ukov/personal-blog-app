@@ -10,19 +10,23 @@ export const usePostStore = defineStore(PINIA_STORE_KEY.POST, () => {
   });
 
   async function getAll(query: GetPostsQueryDto) {
-    const data = await withRequestState(state, () => $fetch<GetPostsResponseDto>("/api/posts", { query }));
-    if (data) {
-      posts.value = data;
+    const result = await withRequestState(state, () => $fetch<GetPostsResponseDto>("/api/posts", { query }));
+    if (result.ok) {
+      posts.value = result.data;
+      return result.data;
     }
+    return null;
   }
 
   async function getByIdOrSlug(idOrSlug: string) {
     post.value = null;
 
-    const data = await withRequestState(state, () => $fetch<GetPostResponseDto>(`/api/posts/${idOrSlug}`));
-    if (data) {
-      post.value = data;
+    const result = await withRequestState(state, () => $fetch<GetPostResponseDto>(`/api/posts/${idOrSlug}`));
+    if (result.ok) {
+      post.value = result.data;
+      return result.data;
     }
+    return null;
   }
 
   return {

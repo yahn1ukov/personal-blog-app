@@ -2,14 +2,14 @@
 const isAuthModalOpen = ref(false);
 
 const store = useAuthStore();
-const { currentUser, isAuthenticated } = storeToRefs(store);
+const { currentUser } = storeToRefs(store);
 const { logout } = store;
 </script>
 
 <template>
-  <nav class="flex justify-end">
-    <div v-if="isAuthenticated" class="inline-flex gap-4">
-      <AppUser v-if="currentUser" :user="currentUser" :style="{ avatar: 'size-9', username: 'font-medium' }" />
+  <nav class="flex items-center justify-end h-9">
+    <div v-if="currentUser" class="inline-flex gap-4">
+      <AppUser :user="currentUser" :styles="{ avatar: 'size-9', username: 'font-medium' }" />
 
       <AppButtonGroup>
         <AppButton type="button" icon="lucide:settings" />
