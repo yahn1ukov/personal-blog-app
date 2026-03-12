@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { MESSAGE_TYPE } from "@/utils/constants/message.constant";
+
 const store = usePostStore();
 const { posts, state } = storeToRefs(store);
 

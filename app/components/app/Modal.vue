@@ -1,11 +1,15 @@
 <script setup lang="ts">
+import type { Tab } from "@/utils/types/tab.type";
+
 interface Props {
   title?: string;
+  tabs?: Tab[];
 }
 
 const props = defineProps<Props>();
 
 const isOpen = defineModel<boolean>({ required: true });
+const activeTab = defineModel<string>("activeTab");
 
 const titleId = useId();
 const title = computed(() => props.title ?? "");
@@ -27,6 +31,13 @@ const title = computed(() => props.title ?? "");
 
           <AppButton type="button" icon="lucide:x" aria-label="Close modal" @click="isOpen = false" />
         </div>
+
+        <AppTabs
+          v-if="tabs?.length"
+          :tabs="tabs"
+          :model-value="activeTab ?? ''"
+          @update:model-value="activeTab = $event"
+        />
 
         <slot />
       </div>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const isAuthModalOpen = ref(false);
+const isSettingsModalOpen = ref(false);
 
 const store = useAuthStore();
 const { currentUser } = storeToRefs(store);
@@ -12,7 +13,7 @@ const { logout } = store;
       <AppUser :user="currentUser" :styles="{ avatar: 'size-9', username: 'font-medium' }" />
 
       <AppButtonGroup>
-        <AppButton type="button" icon="lucide:settings" />
+        <AppButton type="button" icon="lucide:settings" @click="isSettingsModalOpen = true" />
         <AppButton type="button" icon="lucide:log-out" @click="logout" />
       </AppButtonGroup>
     </div>
@@ -20,5 +21,6 @@ const { logout } = store;
     <AppButton v-else type="button" @click="isAuthModalOpen = true">Authentication</AppButton>
 
     <AuthModal v-model="isAuthModalOpen" />
+    <UserModal v-model="isSettingsModalOpen" />
   </nav>
 </template>

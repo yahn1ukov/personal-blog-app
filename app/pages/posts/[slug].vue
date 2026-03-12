@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { MESSAGE_TYPE } from "@/utils/constants/message.constant";
+
 const route = useRoute();
 
 const store = usePostStore();

@@ -1,3 +1,4 @@
+import { FILE_TYPE } from "~~/shared/constants/file.constant";
 import type {
   CreatePostRequestDto,
   GetPostResponseDto,
@@ -6,7 +7,6 @@ import type {
   UpdatePostRequestDto,
 } from "~~/shared/dto/post.dto";
 import { postRepository } from "../repositories/post.repository";
-import { FILE_TYPE } from "../utils/constants/file.constant";
 import { formatSlug } from "../utils/formatters";
 import { PostMapper } from "../utils/mappers/post.mapper";
 import type { CreateCategoryPayload } from "../utils/types/category.type";

@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import type { AuthTabType } from "@/utils/types";
+import { AUTH_TAB_TYPE } from "@/utils/constants/auth.constant";
+import { MESSAGE_TYPE } from "@/utils/constants/message.constant";
+import type { AuthTabType } from "@/utils/types/auth.type";
+import type { Tab } from "@/utils/types/tab.type";
 import type { LoginRequestDto, RegisterRequestDto } from "~~/shared/dto/auth.dto";
 
 const isOpen = defineModel<boolean>({ required: true });
@@ -8,8 +11,12 @@ const store = useAuthStore();
 const { state, currentUser } = storeToRefs(store);
 const { login, register, clearError } = store;
 
-const activeTab = ref<AuthTabType>(AUTH_TAB_TYPE.LOGIN);
+const tabs: Tab[] = [
+  { label: "Login", value: AUTH_TAB_TYPE.LOGIN },
+  { label: "Register", value: AUTH_TAB_TYPE.REGISTER },
+];
 
+const activeTab = ref<AuthTabType>(AUTH_TAB_TYPE.LOGIN);
 const formState = reactive<LoginRequestDto & RegisterRequestDto>({
   firstName: "",
   lastName: "",
@@ -19,17 +26,16 @@ const formState = reactive<LoginRequestDto & RegisterRequestDto>({
 
 const title = computed(() => (activeTab.value === AUTH_TAB_TYPE.LOGIN ? "Login" : "Register"));
 
-function handleTabChange(tab: AuthTabType) {
-  activeTab.value = tab;
-  clearError();
+function resetForm() {
+  Object.assign(formState, {
+    firstName: "",
+    lastName: "",
+    username: "",
+    password: "",
+  });
 }
 
-function resetForm() {
-  formState.firstName = "";
-  formState.lastName = "";
-  formState.username = "";
-  formState.password = "";
-}
+watch(activeTab, () => clearError());
 
 watch(isOpen, (opened) => {
   if (!opened) {
@@ -59,73 +65,26 @@ async function submit() {
 </script>
 
 <template>
-  <AppModal v-model="isOpen" :title="title">
-    <AppButtonGroup class="w-full">
-      <AppButton
-        type="button"
-        class="flex-1"
-        :class="activeTab === AUTH_TAB_TYPE.LOGIN ? 'bg-black text-white' : 'bg-white text-black'"
-        @click="handleTabChange(AUTH_TAB_TYPE.LOGIN)"
-      >
-        Login
-      </AppButton>
-      <AppButton
-        type="button"
-        class="flex-1"
-        :class="activeTab === AUTH_TAB_TYPE.REGISTER ? 'bg-black text-white' : 'bg-white text-black'"
-        @click="handleTabChange(AUTH_TAB_TYPE.REGISTER)"
-      >
-        Register
-      </AppButton>
-    </AppButtonGroup>
-
+  <AppModal v-model="isOpen" v-model:activeTab="activeTab" :title="title" :tabs="tabs">
     <AppMessage v-if="state.error" :message="state.error.message" :type="MESSAGE_TYPE.ERROR" />
 
     <form class="flex flex-col gap-3" @submit.prevent="submit">
       <template v-if="activeTab === AUTH_TAB_TYPE.REGISTER">
-        <div class="flex flex-col gap-1">
-          <label for="firstName" class="text-sm font-medium">First Name</label>
-          <input
-            id="firstName"
-            v-model="formState.firstName"
-            type="text"
-            class="rounded-md border border-black px-3 py-2 text-sm outline-none"
-          />
-        </div>
+        <AppInput type="text" id="firstName" label="First Name" v-model="formState.firstName" />
 
-        <div class="flex flex-col gap-1">
-          <div class="flex items-center justify-between">
-            <label for="lastName" class="text-sm font-medium">Last Name</label>
-            <span class="text-xs">(Optional)</span>
-          </div>
-          <input
-            id="lastName"
-            v-model="formState.lastName"
-            type="text"
-            class="rounded-md border border-black px-3 py-2 text-sm outline-none"
-          />
-        </div>
+        <AppInput
+          type="text"
+          id="lastName"
+          label="Last Name"
+          v-model="formState.lastName"
+          show-hint
+          hint="(Optional)"
+        />
       </template>
 
-      <div class="flex flex-col gap-1">
-        <label for="username" class="text-sm font-medium">Username</label>
-        <input
-          id="username"
-          v-model="formState.username"
-          type="text"
-          class="rounded-md border border-black px-3 py-2 text-sm outline-none"
-        />
-      </div>
+      <AppInput type="text" id="username" label="Username" v-model="formState.username" />
 
-      <div class="flex flex-col gap-1">
-        <label for="password" class="text-sm font-medium">Password</label>
-        <input
-          id="password"
-          v-model="formState.password"
-          type="password"
-          class="rounded-md border border-black px-3 py-2 text-sm outline-none"
-        />
-      </div>
+      <AppInput type="password" id="password" label="Password" v-model="formState.password" />
 
       <AppButton type="submit" :loading="state.isLoading" class="self-start">
         {{ activeTab === AUTH_TAB_TYPE.LOGIN ? "Login" : "Register" }}

@@ -1,8 +1,8 @@
-import { withRequestState, type RequestState } from "@/utils/request-state";
+import { PINIA_STORE_KEY } from "@/utils/constants/pinia.constant";
+import { withRequestState, type RequestState } from "@/utils/http/request-state";
 import type { GetAuthUserResponseDto, LoginRequestDto, RegisterRequestDto } from "~~/shared/dto/auth.dto";
 
 export const useAuthStore = defineStore(PINIA_STORE_KEY.AUTH, () => {
-  const isAuthPluginInitialized = ref(false);
   const currentUser = ref<GetAuthUserResponseDto | null>(null);
   const state = reactive<RequestState>({
     isLoading: false,
@@ -14,27 +14,15 @@ export const useAuthStore = defineStore(PINIA_STORE_KEY.AUTH, () => {
     state.error = null;
 
     try {
-      if (import.meta.server) {
-        const { jwtCookieName } = useRuntimeConfig();
-        const token = useCookie(jwtCookieName);
-        if (!token.value) {
-          currentUser.value = null;
-          return;
-        }
-      }
+      const headers = import.meta.server ? (useRequestHeaders(["cookie"]) as HeadersInit) : undefined;
 
-      const headers = import.meta.server ? ((useRequestHeaders(["cookie"]) as HeadersInit) ?? {}) : undefined;
-
-      const data = await $fetch<GetAuthUserResponseDto>("/api/auth/me", {
-        headers,
-      });
+      const data = await $fetch<GetAuthUserResponseDto>("/api/auth/me", { headers });
 
       currentUser.value = data;
     } catch {
       currentUser.value = null;
     } finally {
       state.isLoading = false;
-      isAuthPluginInitialized.value = true;
     }
   }
 
@@ -65,7 +53,6 @@ export const useAuthStore = defineStore(PINIA_STORE_KEY.AUTH, () => {
 
   return {
     state,
-    isAuthPluginInitialized,
     currentUser,
     getCurrentUser,
     login,

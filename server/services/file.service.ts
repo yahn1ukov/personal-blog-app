@@ -1,8 +1,7 @@
+import { FILE_TYPE } from "~~/shared/constants/file.constant";
 import { InternalServerError } from "~~/shared/errors/internal-server.error";
-import type { FileMetadata } from "~~/shared/types/file.type";
-import { FILE_TYPE } from "../utils/constants/file.constant";
+import type { FileMetadata, FileType } from "~~/shared/types/file.type";
 import { getS3Bucket, minioClient } from "../utils/minio";
-import type { FileType } from "../utils/types/file.type";
 
 class FileService {
   async upload(userId: string, type: FileType, image: FileMetadata): Promise<string> {

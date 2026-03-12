@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { MessageType } from "@/utils/types";
+import { MESSAGE_TYPE } from "@/utils/constants/message.constant";
+import type { MessageType } from "@/utils/types/message.type";
 
 interface Props {
   message: string;

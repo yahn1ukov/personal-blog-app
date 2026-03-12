@@ -6,4 +6,4 @@ export type LoginRequestDto = z.infer<typeof LoginBodySchema>;
 
 export type RegisterRequestDto = z.infer<typeof RegisterBodySchema>;
 
-export type GetAuthUserResponseDto = Pick<UserDto, "username" | "avatarImageURL">;
+export type GetAuthUserResponseDto = Omit<UserDto, "id" | "createdAt">;

@@ -1,4 +1,5 @@
-import { withRequestState, type RequestState } from "@/utils/request-state";
+import { PINIA_STORE_KEY } from "@/utils/constants/pinia.constant";
+import { withRequestState, type RequestState } from "@/utils/http/request-state";
 import type { GetPostResponseDto, GetPostsQueryDto, GetPostsResponseDto } from "~~/shared/dto/post.dto";
 
 export const usePostStore = defineStore(PINIA_STORE_KEY.POST, () => {
@@ -13,8 +14,10 @@ export const usePostStore = defineStore(PINIA_STORE_KEY.POST, () => {
     const result = await withRequestState(state, () => $fetch<GetPostsResponseDto>("/api/posts", { query }));
     if (result.ok) {
       posts.value = result.data;
+
       return result.data;
     }
+
     return null;
   }
 
@@ -24,8 +27,10 @@ export const usePostStore = defineStore(PINIA_STORE_KEY.POST, () => {
     const result = await withRequestState(state, () => $fetch<GetPostResponseDto>(`/api/posts/${idOrSlug}`));
     if (result.ok) {
       post.value = result.data;
+
       return result.data;
     }
+
     return null;
   }
 
