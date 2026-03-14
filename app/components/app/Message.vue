@@ -19,5 +19,5 @@ const classes = computed(() => styles[props.type ?? MESSAGE_TYPE.INFO]);
 </script>
 
 <template>
-  <p class="px-3 py-2 rounded-md border text-sm" :class="classes">{{ message }}</p>
+  <p class="px-3 py-2 rounded-md border text-sm text-center" :class="classes">{{ message }}</p>
 </template>

@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { AUTH_TAB_TYPE } from "@/utils/constants/auth.constant";
-import { MESSAGE_TYPE } from "@/utils/constants/message.constant";
 import type { AuthTabType } from "@/utils/types/auth.type";
 import type { Tab } from "@/utils/types/tab.type";
-import type { LoginRequestDto, RegisterRequestDto } from "~~/shared/dto/auth.dto";
+import type { LoginAndRegisterRequestDto } from "~~/shared/dto/auth.dto";
 
 const isOpen = defineModel<boolean>({ required: true });
 
@@ -17,7 +16,7 @@ const tabs: Tab[] = [
 ];
 
 const activeTab = ref<AuthTabType>(AUTH_TAB_TYPE.LOGIN);
-const formState = reactive<LoginRequestDto & RegisterRequestDto>({
+const formState = reactive<LoginAndRegisterRequestDto>({
   firstName: "",
   lastName: "",
   username: "",
@@ -33,14 +32,15 @@ function resetForm() {
     username: "",
     password: "",
   });
+
+  clearError();
 }
 
-watch(activeTab, () => clearError());
+watch(activeTab, clearError);
 
 watch(isOpen, (opened) => {
   if (!opened) {
     activeTab.value = AUTH_TAB_TYPE.LOGIN;
-    clearError();
     resetForm();
   }
 });
@@ -57,38 +57,24 @@ async function submit() {
       username: formState.username,
       password: formState.password,
     });
-    return;
+  } else {
+    await register(formState);
   }
-
-  await register(formState);
 }
 </script>
 
 <template>
-  <AppModal v-model="isOpen" v-model:activeTab="activeTab" :title="title" :tabs="tabs">
-    <AppMessage v-if="state.error" :message="state.error.message" :type="MESSAGE_TYPE.ERROR" />
-
-    <form class="flex flex-col gap-3" @submit.prevent="submit">
+  <AppModal :title :tabs v-model="isOpen" v-model:activeTab="activeTab">
+    <AppForm :state :submit-label="activeTab === AUTH_TAB_TYPE.LOGIN ? 'Login' : 'Register'" @submit="submit">
       <template v-if="activeTab === AUTH_TAB_TYPE.REGISTER">
         <AppInput type="text" id="firstName" label="First Name" v-model="formState.firstName" />
 
-        <AppInput
-          type="text"
-          id="lastName"
-          label="Last Name"
-          v-model="formState.lastName"
-          show-hint
-          hint="(Optional)"
-        />
+        <AppInput type="text" id="lastName" label="Last Name" v-model="formState.lastName" hint="(Optional)" />
       </template>
 
       <AppInput type="text" id="username" label="Username" v-model="formState.username" />
 
       <AppInput type="password" id="password" label="Password" v-model="formState.password" />
-
-      <AppButton type="submit" :loading="state.isLoading" class="self-start">
-        {{ activeTab === AUTH_TAB_TYPE.LOGIN ? "Login" : "Register" }}
-      </AppButton>
-    </form>
+    </AppForm>
   </AppModal>
 </template>

@@ -47,19 +47,28 @@ class PostRepository {
     );
   }
 
-  async getAll(offset: number, limit: number, categories?: string[]): Promise<PostWithRelationsPayload[]> {
+  async getAll(
+    offset: number,
+    limit: number,
+    categories?: string[],
+  ): Promise<{ count: number; posts: PostWithRelationsPayload[] }> {
     const where: Prisma.PostWhereInput = {};
     if (categories?.length) {
       where.categories = { some: { slug: { in: categories } } };
     }
 
-    return prisma.post.findMany({
-      where,
-      take: limit,
-      skip: offset,
-      select: this.selectOptions,
-      orderBy: { createdAt: "desc" },
-    });
+    const [count, posts] = await Promise.all([
+      prisma.post.count({ where }),
+      prisma.post.findMany({
+        where,
+        take: limit,
+        skip: offset,
+        select: this.selectOptions,
+        orderBy: { createdAt: "desc" },
+      }),
+    ]);
+
+    return { count, posts };
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<PostWithRelationsPayload> {
@@ -71,35 +80,36 @@ class PostRepository {
     );
   }
 
-  async updateById(id: string, authorId: string, payload: UpdatePostPayload): Promise<void> {
+  async updateById(id: string, authorId: string, payload: UpdatePostPayload): Promise<PostWithRelationsPayload> {
     const { categories, ...data } = payload;
 
-    await withPrismaErrorHandling("Post", () =>
-      prisma.$transaction(
-        async (tx) =>
-          await tx.post.update({
-            where: { id, authorId },
-            data: {
-              ...data,
-              ...(categories && {
-                categories: {
-                  set: [],
-                  connectOrCreate: categories.map((category) => ({
-                    where: { slug: category.slug },
-                    create: category,
-                  })),
-                },
-              }),
-            },
-          }),
+    return withPrismaErrorHandling("Post", () =>
+      prisma.$transaction(async (tx) =>
+        tx.post.update({
+          where: { id, authorId },
+          select: this.selectOptions,
+          data: {
+            ...data,
+            ...(categories && {
+              categories: {
+                set: [],
+                connectOrCreate: categories.map((category) => ({
+                  where: { slug: category.slug },
+                  create: category,
+                })),
+              },
+            }),
+          },
+        }),
       ),
     );
   }
 
-  async deleteById(id: string, authorId: string): Promise<void> {
-    await withPrismaErrorHandling("Post", () =>
+  async deleteById(id: string, authorId: string): Promise<Pick<PostWithRelationsPayload, "id">> {
+    return withPrismaErrorHandling("Post", () =>
       prisma.post.delete({
         where: { id, authorId },
+        select: { id: true },
       }),
     );
   }

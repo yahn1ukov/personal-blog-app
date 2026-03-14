@@ -1,6 +1,11 @@
 import { PINIA_STORE_KEY } from "@/utils/constants/pinia.constant";
 import { withRequestState, type RequestState } from "@/utils/http/request-state";
-import type { UpdatePasswordRequestDto } from "~~/shared/dto/user.dto";
+import type {
+  DeleteUserResponseDto,
+  UpdatePasswordRequestDto,
+  UpdatePasswordResponseDto,
+  UpdateUserResponseDto,
+} from "~~/shared/dto/user.dto";
 
 export const useUserStore = defineStore(PINIA_STORE_KEY.USER, () => {
   const authStore = useAuthStore();
@@ -11,7 +16,9 @@ export const useUserStore = defineStore(PINIA_STORE_KEY.USER, () => {
   });
 
   async function update(formData: FormData) {
-    const result = await withRequestState(state, () => $fetch("/api/users", { method: "PATCH", body: formData }));
+    const result = await withRequestState(state, () =>
+      $fetch<UpdateUserResponseDto>("/api/users", { method: "PATCH", body: formData }),
+    );
     if (result.ok) {
       await authStore.getCurrentUser();
     }
@@ -20,7 +27,9 @@ export const useUserStore = defineStore(PINIA_STORE_KEY.USER, () => {
   }
 
   async function updatePassword(dto: UpdatePasswordRequestDto) {
-    const result = await withRequestState(state, () => $fetch("/api/users/password", { method: "PATCH", body: dto }));
+    const result = await withRequestState(state, () =>
+      $fetch<UpdatePasswordResponseDto>("/api/users/password", { method: "PATCH", body: dto }),
+    );
     if (result.ok) {
       await authStore.logout();
     }
@@ -29,7 +38,9 @@ export const useUserStore = defineStore(PINIA_STORE_KEY.USER, () => {
   }
 
   async function remove() {
-    const result = await withRequestState(state, () => $fetch("/api/users", { method: "DELETE" }));
+    const result = await withRequestState(state, () =>
+      $fetch<DeleteUserResponseDto>("/api/users", { method: "DELETE" }),
+    );
     if (result.ok) {
       await authStore.logout();
     }

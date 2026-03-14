@@ -1,6 +1,13 @@
 import { PINIA_STORE_KEY } from "@/utils/constants/pinia.constant";
 import { withRequestState, type RequestState } from "@/utils/http/request-state";
-import type { GetAuthUserResponseDto, LoginRequestDto, RegisterRequestDto } from "~~/shared/dto/auth.dto";
+import type {
+  GetAuthUserResponseDto,
+  LoginRequestDto,
+  LoginResponseDto,
+  LogoutResponseDto,
+  RegisterRequestDto,
+  RegisterResponseDto,
+} from "~~/shared/dto/auth.dto";
 
 export const useAuthStore = defineStore(PINIA_STORE_KEY.AUTH, () => {
   const currentUser = ref<GetAuthUserResponseDto | null>(null);
@@ -27,21 +34,27 @@ export const useAuthStore = defineStore(PINIA_STORE_KEY.AUTH, () => {
   }
 
   async function login(dto: LoginRequestDto) {
-    const result = await withRequestState(state, () => $fetch("/api/auth/login", { method: "POST", body: dto }));
+    const result = await withRequestState(state, () =>
+      $fetch<LoginResponseDto>("/api/auth/login", { method: "POST", body: dto }),
+    );
     if (result.ok) {
       await getCurrentUser();
     }
   }
 
   async function register(dto: RegisterRequestDto) {
-    const result = await withRequestState(state, () => $fetch("/api/auth/register", { method: "POST", body: dto }));
+    const result = await withRequestState(state, () =>
+      $fetch<RegisterResponseDto>("/api/auth/register", { method: "POST", body: dto }),
+    );
     if (result.ok) {
       await getCurrentUser();
     }
   }
 
   async function logout() {
-    const result = await withRequestState(state, () => $fetch("/api/auth/logout", { method: "POST" }));
+    const result = await withRequestState(state, () =>
+      $fetch<LogoutResponseDto>("/api/auth/logout", { method: "POST" }),
+    );
     if (result.ok) {
       currentUser.value = null;
     }

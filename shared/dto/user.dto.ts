@@ -15,4 +15,14 @@ export type UpdateUserRequestDto = z.infer<typeof UpdateUserBodySchema> & {
   avatarImage?: FileMetadata;
 };
 
+export type UpdateUserResponseDto = void;
+
 export type UpdatePasswordRequestDto = z.infer<typeof UpdateUserPasswordBodySchema>;
+
+export type UpdatePasswordResponseDto = void;
+
+export type DeleteUserResponseDto = void;
+
+export type UpdateUserAndPasswordRequestDto = Omit<UpdateUserRequestDto, "avatarImage"> & {
+  avatarImage: File | null;
+} & UpdatePasswordRequestDto;

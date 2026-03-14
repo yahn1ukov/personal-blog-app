@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { MESSAGE_TYPE } from "@/utils/constants/message.constant";
 import { USER_TAB_TYPE } from "@/utils/constants/user.constant";
+import type { Result } from "@/utils/http/request-state";
 import type { Tab } from "@/utils/types/tab.type";
 import type { UserTabType } from "@/utils/types/user.type";
 import { FILE_TYPE } from "~~/shared/constants/file.constant";
-import type { UpdatePasswordRequestDto, UpdateUserRequestDto } from "~~/shared/dto/user.dto";
+import type { UpdateUserAndPasswordRequestDto } from "~~/shared/dto/user.dto";
 
 const isOpen = defineModel<boolean>({ required: true });
 
@@ -21,9 +21,7 @@ const tabs: Tab[] = [
 ];
 
 const activeTab = ref<UserTabType>(USER_TAB_TYPE.USER);
-const formState = reactive<
-  Omit<UpdateUserRequestDto, "avatarImage"> & { avatarImage: File | null } & UpdatePasswordRequestDto
->({
+const formState = reactive<UpdateUserAndPasswordRequestDto>({
   avatarImage: null,
   firstName: "",
   lastName: "",
@@ -34,7 +32,7 @@ const formState = reactive<
 
 const title = computed(() => (activeTab.value === USER_TAB_TYPE.USER ? "User Settings" : "Change Password"));
 
-watch(activeTab, () => clearError());
+watch(activeTab, clearError);
 
 function resetForms() {
   Object.assign(formState, {
@@ -56,29 +54,29 @@ watch(isOpen, (opened) => {
   }
 });
 
-async function submitUpdate() {
-  const formData = new FormData();
+async function submit() {
+  let result: Result<unknown>;
 
-  formData.append("lastName", formState.lastName ?? "");
+  if (activeTab.value === USER_TAB_TYPE.USER) {
+    const formData = new FormData();
 
-  if (formState.firstName) {
-    formData.append("firstName", formState.firstName);
-  }
-  if (formState.username) {
-    formData.append("username", formState.username);
-  }
-  if (formState.avatarImage) {
-    formData.append("image", formState.avatarImage);
+    formData.append("lastName", formState.lastName ?? "");
+
+    if (formState.firstName) {
+      formData.append("firstName", formState.firstName);
+    }
+    if (formState.username) {
+      formData.append("username", formState.username);
+    }
+    if (formState.avatarImage) {
+      formData.append("image", formState.avatarImage);
+    }
+
+    result = await update(formData);
+  } else {
+    result = await updatePassword({ oldPassword: formState.oldPassword, newPassword: formState.newPassword });
   }
 
-  const result = await update(formData);
-  if (result.ok) {
-    isOpen.value = false;
-  }
-}
-
-async function submitUpdatePassword() {
-  const result = await updatePassword({ oldPassword: formState.oldPassword, newPassword: formState.newPassword });
   if (result.ok) {
     isOpen.value = false;
   }
@@ -91,11 +89,9 @@ async function handleRemove() {
 </script>
 
 <template>
-  <AppModal v-model="isOpen" v-model:activeTab="activeTab" :title="title" :tabs="tabs">
+  <AppModal :title :tabs v-model="isOpen" v-model:activeTab="activeTab">
     <template v-if="activeTab === USER_TAB_TYPE.USER">
-      <AppMessage v-if="state.error" :message="state.error.message" :type="MESSAGE_TYPE.ERROR" />
-
-      <form class="flex flex-col gap-3" @submit.prevent="submitUpdate">
+      <AppForm :state submit-label="Save" @submit="submit">
         <AppFileUpload
           id="avatarImage"
           label="Avatar"
@@ -110,7 +106,7 @@ async function handleRemove() {
 
         <AppInput type="text" id="username" label="Username" v-model="formState.username" />
 
-        <div class="flex items-center justify-between">
+        <template #actions>
           <AppButton type="submit" :loading="state.isLoading">Save</AppButton>
           <AppButton
             type="button"
@@ -119,20 +115,16 @@ async function handleRemove() {
           >
             Delete Account
           </AppButton>
-        </div>
-      </form>
+        </template>
+      </AppForm>
     </template>
 
     <template v-else>
-      <AppMessage v-if="state.error" :message="state.error.message" :type="MESSAGE_TYPE.ERROR" />
-
-      <form class="flex flex-col gap-3" @submit.prevent="submitUpdatePassword">
+      <AppForm :state submit-label="Change Password" @submit="submit">
         <AppInput type="password" id="oldPassword" label="Old Password" v-model="formState.oldPassword" />
 
         <AppInput type="password" id="newPassword" label="New Password" v-model="formState.newPassword" />
-
-        <AppButton type="submit" :loading="state.isLoading" class="self-start">Change Password</AppButton>
-      </form>
+      </AppForm>
     </template>
   </AppModal>
 </template>

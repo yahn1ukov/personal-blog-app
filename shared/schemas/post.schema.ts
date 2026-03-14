@@ -16,9 +16,13 @@ export const CreatePostBodySchema = z.object({
 
 export const GetPostsQuerySchema = z.object({
   page: z.coerce.number().min(1).optional().default(1),
-  limit: z.coerce.number().min(1).max(20).optional().default(10),
+  limit: z.coerce.number().min(1).max(20).optional().default(6),
   categories: z
-    .preprocess((value) => typeof value === "string" && value.split(",").map((v) => v.trim()), z.array(z.string()))
+    .preprocess((value) => {
+      if (Array.isArray(value)) return value;
+      if (typeof value === "string") return value.split(",").map((v) => v.trim());
+      return undefined;
+    }, z.array(z.string()))
     .optional(),
 });
 

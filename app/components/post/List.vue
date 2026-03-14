@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { GetPostsResponseDto } from "~~/shared/dto/post.dto";
+import type { PostDto } from "~~/shared/dto/post.dto";
 
 interface Props {
-  posts: GetPostsResponseDto;
+  posts: PostDto[];
 }
 
 defineProps<Props>();

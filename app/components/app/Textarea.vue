@@ -1,6 +1,5 @@
 <script setup lang="ts">
 interface Props {
-  type: "text" | "password";
   id: string;
   label: string;
   placeholder?: string;
@@ -8,7 +7,7 @@ interface Props {
 }
 
 defineProps<Props>();
-const model = defineModel<string | undefined>({ required: true });
+const model = defineModel<string>({ required: true });
 </script>
 
 <template>
@@ -20,11 +19,11 @@ const model = defineModel<string | undefined>({ required: true });
 
     <label v-else :for="id" class="text-sm font-medium">{{ label }}</label>
 
-    <input
+    <textarea
       :id
-      :type="type"
       :placeholder
-      class="rounded-md border border-black px-3 py-2 text-sm outline-none"
+      class="rounded-md border border-black px-3 py-2 text-sm outline-none resize-none"
+      rows="4"
       v-model="model"
     />
   </div>

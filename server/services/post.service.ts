@@ -1,10 +1,12 @@
 import { FILE_TYPE } from "~~/shared/constants/file.constant";
 import type {
   CreatePostRequestDto,
+  DeletePostResponseDto,
   GetPostResponseDto,
   GetPostsQueryDto,
   GetPostsResponseDto,
   UpdatePostRequestDto,
+  UpdatePostResponseDto,
 } from "~~/shared/dto/post.dto";
 import { postRepository } from "../repositories/post.repository";
 import { formatSlug } from "../utils/formatters";
@@ -33,9 +35,10 @@ class PostService {
 
     const offset = (page - 1) * limit;
 
-    const posts = await postRepository.getAll(offset, limit, categories);
+    const { count, posts } = await postRepository.getAll(offset, limit, categories);
+    const totalPages = Math.ceil(count / limit);
 
-    return posts.map((post) => PostMapper.toDto(post));
+    return PostMapper.toPaginateDto(totalPages, posts);
   }
 
   async getByIdOrSlug(idOrSlug: string): Promise<GetPostResponseDto> {
@@ -44,22 +47,24 @@ class PostService {
     return PostMapper.toDto(post);
   }
 
-  async updateById(id: string, authorId: string, dto: UpdatePostRequestDto): Promise<void> {
+  async updateById(id: string, authorId: string, dto: UpdatePostRequestDto): Promise<UpdatePostResponseDto> {
     const { coverImage, categories, ...data } = dto;
 
     const slug = data.title && this.generateSlug(data.title);
     const coverImageURL = coverImage && (await fileService.upload(authorId, FILE_TYPE.COVER, coverImage));
     const transformedCategories = categories && this.transformCategoriesToPayload(categories);
 
-    return postRepository.updateById(id, authorId, {
+    const post = await postRepository.updateById(id, authorId, {
       ...data,
       slug,
       coverImageURL,
       categories: transformedCategories,
     });
+
+    return PostMapper.toDto(post);
   }
 
-  async deleteById(id: string, authorId: string): Promise<void> {
+  async deleteById(id: string, authorId: string): Promise<DeletePostResponseDto> {
     return postRepository.deleteById(id, authorId);
   }
 

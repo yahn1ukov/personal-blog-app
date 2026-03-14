@@ -10,6 +10,7 @@ class CategoryRepository {
   async getAll(): Promise<CategoryPayload[]> {
     return prisma.category.findMany({
       select: this.selectOptions,
+      orderBy: { name: "asc" },
     });
   }
 }

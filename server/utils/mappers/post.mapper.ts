@@ -1,4 +1,4 @@
-import type { PostDto } from "~~/shared/dto/post.dto";
+import type { GetPostsResponseDto, PostDto } from "~~/shared/dto/post.dto";
 import { formatImageURL } from "../formatters";
 import type { PostWithRelationsPayload } from "../types/post.type";
 
@@ -21,6 +21,13 @@ export class PostMapper {
         slug: category.slug,
       })),
       createdAt: post.createdAt,
+    };
+  }
+
+  static toPaginateDto(totalPages: number, posts: PostWithRelationsPayload[]): GetPostsResponseDto {
+    return {
+      totalPages,
+      posts: posts.map((post) => this.toDto(post)),
     };
   }
 }

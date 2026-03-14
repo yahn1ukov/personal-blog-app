@@ -21,12 +21,24 @@ export interface GetPostsQueryDto {
   categories?: string[];
 }
 
+export interface GetPostsResponseDto {
+  totalPages: number;
+  posts: PostDto[];
+}
+
 export type CreatePostRequestDto = z.infer<typeof CreatePostBodySchema> & {
   coverImage?: FileMetadata;
 };
 
-export type GetPostsResponseDto = PostDto[];
+export type CreatePostResponseDto = void;
 
 export type GetPostResponseDto = PostDto;
 
 export type UpdatePostRequestDto = Partial<CreatePostRequestDto>;
+
+export type UpdatePostResponseDto = PostDto;
+
+export type DeletePostResponseDto = Pick<PostDto, "id">;
+
+export type CreateUpdatePostRequestDto = Omit<CreatePostRequestDto, "coverImage" | "categories"> &
+  Omit<UpdatePostRequestDto, "coverImage" | "categories"> & { coverImage: File | null; categories: string[] };

@@ -7,7 +7,7 @@
     </header>
 
     <main class="flex-1 flex flex-col">
-      <AppContainer>
+      <AppContainer class="flex flex-col">
         <NuxtPage />
       </AppContainer>
     </main>

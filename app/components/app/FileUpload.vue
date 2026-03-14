@@ -10,19 +10,19 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const model = defineModel<File | undefined | null>({ required: true });
+const model = defineModel<File | null>({ required: true });
 
 const inputRef = ref<HTMLInputElement | null>(null);
 const dropZoneRef = ref<HTMLDivElement | null>(null);
 
 const previewUrl = useObjectUrl(model);
-const displayImage = computed(() => previewUrl.value ?? props.currentImage);
 
+const displayImage = computed(() => previewUrl.value ?? props.currentImage);
 const isAvatar = computed(() => props.fileType === FILE_TYPE.AVATAR);
 
 function onDrop(files: File[] | null) {
   if (files?.length) {
-    model.value = files[0];
+    model.value = files[0]!;
   }
 }
 
