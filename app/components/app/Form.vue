@@ -24,11 +24,9 @@ const hasActions = computed(() => !!slots.actions);
 
     <slot />
 
-    <div v-if="hasActions" class="flex items-center justify-between">
-      <slot name="actions" />
-    </div>
+    <slot v-if="hasActions" name="actions" />
 
-    <AppButton v-else type="submit" :loading="state.isLoading" class="self-start">
+    <AppButton v-else type="submit" :loading="state.isLoading">
       {{ submitLabel }}
     </AppButton>
   </form>

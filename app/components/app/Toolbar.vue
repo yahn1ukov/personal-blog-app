@@ -19,11 +19,11 @@ const categoryOptions = computed(() =>
 
 <template>
   <div class="flex items-center justify-between gap-3">
+    <AppSelect :options="categoryOptions" placeholder="Select categories" multiple v-model="selectedCategories" />
+
     <AppButton v-if="currentUser" type="button" icon="lucide:plus" @click="isPostModalOpen = true">
       Add Post
     </AppButton>
-
-    <AppSelect :options="categoryOptions" placeholder="All categories" multiple v-model="selectedCategories" />
 
     <PostModal v-model="isPostModalOpen" />
   </div>

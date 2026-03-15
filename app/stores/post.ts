@@ -80,10 +80,6 @@ export const usePostStore = defineStore(PINIA_STORE_KEY.POST, () => {
     return result;
   }
 
-  function clearError() {
-    state.error = null;
-  }
-
   return {
     posts,
     totalPages,
@@ -95,6 +91,5 @@ export const usePostStore = defineStore(PINIA_STORE_KEY.POST, () => {
     getByIdOrSlug,
     update,
     remove,
-    clearError,
   };
 });

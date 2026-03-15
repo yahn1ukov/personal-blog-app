@@ -8,16 +8,20 @@ interface Props {
 defineProps<Props>();
 
 const activeTab = defineModel<string>({ required: true });
+
+function tabClass(tab: Tab) {
+  return activeTab.value === tab.value ? "bg-black text-white" : "bg-white text-black";
+}
 </script>
 
 <template>
-  <AppButtonGroup class="w-full">
+  <AppButtonGroup>
     <AppButton
       v-for="tab in tabs"
       :key="tab.value"
       type="button"
       class="flex-1"
-      :class="activeTab === tab.value ? 'bg-black text-white' : 'bg-white text-black'"
+      :class="tabClass(tab)"
       @click="activeTab = tab.value"
     >
       {{ tab.label }}

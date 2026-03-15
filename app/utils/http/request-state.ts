@@ -31,3 +31,7 @@ export async function withRequestState<T>(state: RequestState, fn: () => Promise
     state.isLoading = false;
   }
 }
+
+export function clearRequestError(state: Ref<RequestState>) {
+  state.value.error = null;
+}

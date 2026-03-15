@@ -14,7 +14,7 @@ const hasText = computed(() => !!slots.default);
 
 <template>
   <button
-    :type="type"
+    :type
     class="rounded-md inline-flex items-center justify-center gap-1.5 text-sm font-medium border border-black transition-colors hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-transparent disabled:hover:text-black"
     :class="hasText ? 'px-2.5 py-1.5' : 'p-1.5'"
     :disabled="loading || disabled"

@@ -1,10 +1,18 @@
 <script setup lang="ts">
 import { USER_TAB_TYPE } from "@/utils/constants/user.constant";
-import type { Result } from "@/utils/http/request-state";
+import { clearRequestError, type Result } from "@/utils/http/request-state";
 import type { Tab } from "@/utils/types/tab.type";
 import type { UserTabType } from "@/utils/types/user.type";
 import { FILE_TYPE } from "~~/shared/constants/file.constant";
-import type { UpdateUserAndPasswordRequestDto } from "~~/shared/dto/user.dto";
+
+interface FormState {
+  avatarImage: File | null;
+  firstName: string;
+  lastName: string;
+  username: string;
+  oldPassword: string;
+  newPassword: string;
+}
 
 const isOpen = defineModel<boolean>({ required: true });
 
@@ -13,7 +21,7 @@ const { currentUser } = storeToRefs(authStore);
 
 const userStore = useUserStore();
 const { state } = storeToRefs(userStore);
-const { update, updatePassword, remove, clearError } = userStore;
+const { update, updatePassword, remove } = userStore;
 
 const tabs: Tab[] = [
   { label: "User", value: USER_TAB_TYPE.USER },
@@ -21,7 +29,7 @@ const tabs: Tab[] = [
 ];
 
 const activeTab = ref<UserTabType>(USER_TAB_TYPE.USER);
-const formState = reactive<UpdateUserAndPasswordRequestDto>({
+const formState = reactive<FormState>({
   avatarImage: null,
   firstName: "",
   lastName: "",
@@ -32,7 +40,7 @@ const formState = reactive<UpdateUserAndPasswordRequestDto>({
 
 const title = computed(() => (activeTab.value === USER_TAB_TYPE.USER ? "User Settings" : "Change Password"));
 
-watch(activeTab, clearError);
+watch(activeTab, () => clearRequestError(state));
 
 function resetForms() {
   Object.assign(formState, {
@@ -44,7 +52,7 @@ function resetForms() {
     newPassword: "",
   });
 
-  clearError();
+  clearRequestError(state);
 }
 
 watch(isOpen, (opened) => {
@@ -83,8 +91,10 @@ async function submit() {
 }
 
 async function handleRemove() {
-  await remove();
-  isOpen.value = false;
+  const result = await remove();
+  if (result.ok) {
+    isOpen.value = false;
+  }
 }
 </script>
 
@@ -107,21 +117,23 @@ async function handleRemove() {
         <AppInput type="text" id="username" label="Username" v-model="formState.username" />
 
         <template #actions>
-          <AppButton type="submit" :loading="state.isLoading">Save</AppButton>
-          <AppButton
-            type="button"
-            class="border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
-            @click="handleRemove"
-          >
-            Delete Account
-          </AppButton>
+          <AppButtonGroup class="w-full">
+            <AppButton type="submit" :loading="state.isLoading" class="flex-1">Save</AppButton>
+            <AppButton
+              type="button"
+              class="flex-1 border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+              @click="handleRemove"
+            >
+              Delete Account
+            </AppButton>
+          </AppButtonGroup>
         </template>
       </AppForm>
     </template>
 
     <template v-else>
-      <AppForm :state submit-label="Change Password" @submit="submit">
-        <AppInput type="password" id="oldPassword" label="Old Password" v-model="formState.oldPassword" />
+      <AppForm :state submit-label="Change" @submit="submit">
+        <AppInput type="password" id="oldPassword" label="Current Password" v-model="formState.oldPassword" />
 
         <AppInput type="password" id="newPassword" label="New Password" v-model="formState.newPassword" />
       </AppForm>

@@ -48,15 +48,10 @@ export const useUserStore = defineStore(PINIA_STORE_KEY.USER, () => {
     return result;
   }
 
-  function clearError() {
-    state.error = null;
-  }
-
   return {
     state,
     update,
     updatePassword,
     remove,
-    clearError,
   };
 });

@@ -9,7 +9,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const isOpen = defineModel<boolean>({ required: true });
-const activeTab = defineModel<string>("activeTab");
+const activeTab = defineModel<string>("activeTab", { default: "" });
 
 const titleId = useId();
 const title = computed(() => props.title ?? "");
@@ -32,12 +32,7 @@ const title = computed(() => props.title ?? "");
           <AppButton type="button" icon="lucide:x" aria-label="Close modal" @click="isOpen = false" />
         </div>
 
-        <AppTabs
-          v-if="tabs?.length"
-          :tabs="tabs"
-          :model-value="activeTab ?? ''"
-          @update:model-value="activeTab = $event"
-        />
+        <AppTabs v-if="tabs?.length" :tabs class="w-full" v-model="activeTab" />
 
         <slot />
       </div>

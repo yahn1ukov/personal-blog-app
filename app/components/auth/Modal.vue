@@ -1,14 +1,21 @@
 <script setup lang="ts">
 import { AUTH_TAB_TYPE } from "@/utils/constants/auth.constant";
+import { clearRequestError } from "@/utils/http/request-state";
 import type { AuthTabType } from "@/utils/types/auth.type";
 import type { Tab } from "@/utils/types/tab.type";
-import type { LoginAndRegisterRequestDto } from "~~/shared/dto/auth.dto";
+
+interface FormState {
+  firstName: string;
+  lastName: string;
+  username: string;
+  password: string;
+}
 
 const isOpen = defineModel<boolean>({ required: true });
 
 const store = useAuthStore();
-const { state, currentUser } = storeToRefs(store);
-const { login, register, clearError } = store;
+const { state } = storeToRefs(store);
+const { login, register } = store;
 
 const tabs: Tab[] = [
   { label: "Login", value: AUTH_TAB_TYPE.LOGIN },
@@ -16,7 +23,7 @@ const tabs: Tab[] = [
 ];
 
 const activeTab = ref<AuthTabType>(AUTH_TAB_TYPE.LOGIN);
-const formState = reactive<LoginAndRegisterRequestDto>({
+const formState = reactive<FormState>({
   firstName: "",
   lastName: "",
   username: "",
@@ -33,10 +40,10 @@ function resetForm() {
     password: "",
   });
 
-  clearError();
+  clearRequestError(state);
 }
 
-watch(activeTab, clearError);
+watch(activeTab, () => clearRequestError(state));
 
 watch(isOpen, (opened) => {
   if (!opened) {
@@ -45,20 +52,14 @@ watch(isOpen, (opened) => {
   }
 });
 
-watch(currentUser, (user) => {
-  if (user && isOpen.value) {
-    isOpen.value = false;
-  }
-});
-
 async function submit() {
-  if (activeTab.value === AUTH_TAB_TYPE.LOGIN) {
-    await login({
-      username: formState.username,
-      password: formState.password,
-    });
-  } else {
-    await register(formState);
+  const result =
+    activeTab.value === AUTH_TAB_TYPE.LOGIN
+      ? await login({ username: formState.username, password: formState.password })
+      : await register(formState);
+
+  if (result.ok) {
+    isOpen.value = false;
   }
 }
 </script>
@@ -69,7 +70,7 @@ async function submit() {
       <template v-if="activeTab === AUTH_TAB_TYPE.REGISTER">
         <AppInput type="text" id="firstName" label="First Name" v-model="formState.firstName" />
 
-        <AppInput type="text" id="lastName" label="Last Name" v-model="formState.lastName" hint="(Optional)" />
+        <AppInput type="text" id="lastName" label="Last Name" v-model="formState.lastName" hint="Optional" />
       </template>
 
       <AppInput type="text" id="username" label="Username" v-model="formState.username" />

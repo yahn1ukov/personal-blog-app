@@ -35,33 +35,43 @@ export const useAuthStore = defineStore(PINIA_STORE_KEY.AUTH, () => {
 
   async function login(dto: LoginRequestDto) {
     const result = await withRequestState(state, () =>
-      $fetch<LoginResponseDto>("/api/auth/login", { method: "POST", body: dto }),
+      $fetch<LoginResponseDto>("/api/auth/login", {
+        method: "POST",
+        body: dto,
+      }),
     );
     if (result.ok) {
       await getCurrentUser();
     }
+
+    return result;
   }
 
   async function register(dto: RegisterRequestDto) {
     const result = await withRequestState(state, () =>
-      $fetch<RegisterResponseDto>("/api/auth/register", { method: "POST", body: dto }),
+      $fetch<RegisterResponseDto>("/api/auth/register", {
+        method: "POST",
+        body: dto,
+      }),
     );
     if (result.ok) {
       await getCurrentUser();
     }
+
+    return result;
   }
 
   async function logout() {
     const result = await withRequestState(state, () =>
-      $fetch<LogoutResponseDto>("/api/auth/logout", { method: "POST" }),
+      $fetch<LogoutResponseDto>("/api/auth/logout", {
+        method: "POST",
+      }),
     );
     if (result.ok) {
       currentUser.value = null;
     }
-  }
 
-  function clearError() {
-    state.error = null;
+    return result;
   }
 
   return {
@@ -71,6 +81,5 @@ export const useAuthStore = defineStore(PINIA_STORE_KEY.AUTH, () => {
     login,
     register,
     logout,
-    clearError,
   };
 });

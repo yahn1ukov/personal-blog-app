@@ -35,6 +35,10 @@ const pages = computed(() => {
 
   return items;
 });
+
+function pageClass(page: number) {
+  return currentPage.value === page ? "bg-black text-white hover:bg-black" : "";
+}
 </script>
 
 <template>
@@ -42,12 +46,7 @@ const pages = computed(() => {
     <template v-for="(page, i) in pages" :key="i">
       <span v-if="page === '...'" class="px-1 text-sm select-none">...</span>
 
-      <AppButton
-        v-else
-        type="button"
-        :class="currentPage === page ? 'bg-black text-white hover:bg-black' : ''"
-        @click="currentPage = page"
-      >
+      <AppButton v-else type="button" :class="pageClass(page as number)" @click="currentPage = page">
         {{ page }}
       </AppButton>
     </template>

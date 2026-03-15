@@ -8,5 +8,5 @@ defineProps<Props>();
 </script>
 
 <template>
-  <img :src="src" :alt="alt" class="w-full object-cover" />
+  <img :src :alt class="w-full object-cover" />
 </template>

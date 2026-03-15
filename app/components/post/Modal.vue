@@ -1,7 +1,14 @@
 <script setup lang="ts">
-import type { Result } from "~/utils/http/request-state";
+import { clearRequestError, type Result } from "@/utils/http/request-state";
 import { FILE_TYPE } from "~~/shared/constants/file.constant";
-import type { CreateUpdatePostRequestDto, PostDto } from "~~/shared/dto/post.dto";
+import type { PostDto } from "~~/shared/dto/post.dto";
+
+interface FormState {
+  coverImage: File | null;
+  title: string;
+  content: string;
+  categories: string[];
+}
 
 interface Props {
   post?: PostDto;
@@ -15,7 +22,7 @@ const { categories } = storeToRefs(categoryStore);
 
 const postStore = usePostStore();
 const { state } = storeToRefs(postStore);
-const { create, update, clearError } = postStore;
+const { create, update } = postStore;
 
 const isUpdateMode = computed(() => !!props.post);
 const title = computed(() => (!isUpdateMode.value ? "Add Post" : "Update Post"));
@@ -26,7 +33,7 @@ const categoryOptions = computed(() =>
   })),
 );
 
-const formState = reactive<CreateUpdatePostRequestDto>({
+const formState = reactive<FormState>({
   coverImage: null,
   title: "",
   content: "",
@@ -45,7 +52,7 @@ function resetForm() {
     coverImage: null,
   });
 
-  clearError();
+  clearRequestError(state);
 }
 
 watch(isOpen, (opened) => {
@@ -114,6 +121,7 @@ async function submit() {
             :key="category"
             icon="lucide:x"
             :label="category"
+            class="cursor-pointer"
             @click="removeCategory(category)"
           />
         </div>

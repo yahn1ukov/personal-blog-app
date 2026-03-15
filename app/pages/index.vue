@@ -9,20 +9,21 @@ const categoryStore = useCategoryStore();
 const currentPage = ref(1);
 const selectedCategories = ref<string[]>([]);
 
+async function onPageChange(page: number) {
+  currentPage.value = page;
+  query.value = { ...query.value, page };
+  await postStore.getAll();
+}
+
 watch(selectedCategories, async (slugs) => {
   currentPage.value = 1;
   query.value = slugs.length ? { categories: slugs } : {};
   await postStore.getAll();
 });
 
-watch(currentPage, async (page) => {
-  query.value = { ...query.value, page };
-  await postStore.getAll();
-});
-
-watch(posts, (newPosts) => {
+watch(posts, async (newPosts) => {
   if (newPosts.length === 0 && currentPage.value > 1) {
-    currentPage.value -= 1;
+    await onPageChange(currentPage.value - 1);
   }
 });
 
@@ -43,7 +44,7 @@ await useAsyncData("categories-index", () => categoryStore.getAll());
       <AppMessage v-else message="No Posts" />
 
       <div class="flex justify-center mt-auto pt-6">
-        <AppPagination v-model="currentPage" :total-pages="totalPages" />
+        <AppPagination :model-value="currentPage" :total-pages="totalPages" @update:model-value="onPageChange" />
       </div>
     </template>
   </div>

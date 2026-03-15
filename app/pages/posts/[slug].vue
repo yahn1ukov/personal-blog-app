@@ -14,7 +14,8 @@ await useAsyncData(
 
 const formattedCreatedAt = useDateFormat(
   computed(() => post.value?.createdAt),
-  "DD.MM.YYYY HH:mm",
+  "MMMM D, YYYY",
+  { locales: "en-US" },
 );
 </script>
 

@@ -8,7 +8,7 @@ const { logout } = store;
 </script>
 
 <template>
-  <nav class="flex items-center justify-end h-9">
+  <nav class="flex items-center justify-end w-full h-9">
     <div v-if="currentUser" class="inline-flex gap-4">
       <AppUser :user="currentUser" :styles="{ avatar: 'size-9', username: 'font-medium' }" />
 

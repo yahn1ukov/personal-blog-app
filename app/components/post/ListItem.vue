@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { clearRequestError } from "@/utils/http/request-state";
 import type { PostDto } from "~~/shared/dto/post.dto";
 
 interface Props {
@@ -11,6 +12,7 @@ const authStore = useAuthStore();
 const { currentUser } = storeToRefs(authStore);
 
 const postStore = usePostStore();
+const { state } = storeToRefs(postStore);
 const { remove } = postStore;
 
 const formattedCreatedAt = useTimeAgo(props.post.createdAt);
@@ -19,12 +21,15 @@ const isAuthor = computed(() => !!currentUser.value && currentUser.value.usernam
 const isEditModalOpen = ref(false);
 
 async function handleDelete() {
-  await remove(props.post.id);
+  const result = await remove(props.post.id);
+  if (!result.ok) {
+    clearRequestError(state);
+  }
 }
 </script>
 
 <template>
-  <li class="flex flex-col h-full border border-black rounded-md overflow-hidden transition-colors hover:bg-neutral-50">
+  <li class="flex flex-col border border-black rounded-md overflow-hidden transition-colors hover:bg-neutral-50">
     <NuxtLink :to="{ name: 'posts-slug', params: { slug: post.slug } }" class="flex flex-col flex-1">
       <AppBanner v-if="post.coverImageURL" :src="post.coverImageURL" :alt="post.slug" class="h-24" />
 
@@ -32,13 +37,13 @@ async function handleDelete() {
         <div class="flex items-center justify-between gap-2">
           <AppUser
             :user="post.author"
-            :show-full-name="true"
+            show-full-name
             :styles="{ avatar: 'size-8', fullName: 'text-sm', username: 'text-xs text-black/50' }"
           />
           <span class="text-xs text-black/50 whitespace-nowrap">{{ formattedCreatedAt }}</span>
         </div>
 
-        <div class="flex flex-wrap gap-1.5">
+        <div class="flex flex-wrap gap-2">
           <AppChip v-for="category in post.categories" :key="category.slug" :label="category.name" />
         </div>
 

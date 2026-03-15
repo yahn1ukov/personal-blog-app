@@ -31,12 +31,12 @@ const fullName = computed(() => {
   <div class="inline-flex items-center gap-2 min-w-0">
     <img
       :src="user.avatarImageURL ?? defaultAvatarImage"
-      :class="[props.styles?.avatar, 'rounded-full object-cover']"
+      :class="[styles?.avatar, 'rounded-full object-cover']"
       :alt="user.username"
     />
     <div class="flex flex-col min-w-0">
-      <span v-if="props.showFullName" :class="[props.styles?.fullName, 'font-medium truncate']">{{ fullName }}</span>
-      <span :class="[props.styles?.username, 'truncate']">@{{ user.username }}</span>
+      <span v-if="showFullName" :class="[styles?.fullName, 'font-medium truncate']">{{ fullName }}</span>
+      <span :class="[styles?.username, 'truncate']">@{{ user.username }}</span>
     </div>
   </div>
 </template>

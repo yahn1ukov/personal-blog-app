@@ -8,7 +8,7 @@ interface Props {
 }
 
 defineProps<Props>();
-const model = defineModel<string | undefined>({ required: true });
+const model = defineModel<string>({ required: true });
 </script>
 
 <template>
@@ -22,7 +22,7 @@ const model = defineModel<string | undefined>({ required: true });
 
     <input
       :id
-      :type="type"
+      :type
       :placeholder
       class="rounded-md border border-black px-3 py-2 text-sm outline-none"
       v-model="model"
