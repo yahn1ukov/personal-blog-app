@@ -1,6 +1,6 @@
-import { FILE_TYPE } from "~~/shared/constants/file.constant";
-import type { UpdatePasswordRequestDto, UpdateUserRequestDto } from "~~/shared/dto/user.dto";
-import { BadRequestError } from "~~/shared/errors/bad-request.error";
+import { FILE_TYPE } from "~~/shared/constants";
+import type { UpdatePasswordRequestDto, UpdateUserRequestDto } from "~~/shared/dto";
+import { BadRequestError } from "~~/shared/errors";
 import { userRepository } from "../repositories/user.repository";
 import { hashPassword, verifyPassword } from "../utils/http/auth/hash";
 import { fileService } from "./file.service";

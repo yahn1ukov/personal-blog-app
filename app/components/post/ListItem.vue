@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { clearRequestError } from "@/utils/http/request-state";
-import type { PostDto } from "~~/shared/dto/post.dto";
+import type { PostDto } from "~~/shared/dto";
 
 interface Props {
   post: PostDto;

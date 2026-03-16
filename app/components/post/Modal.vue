@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { clearRequestError, type Result } from "@/utils/http/request-state";
-import { FILE_TYPE } from "~~/shared/constants/file.constant";
-import type { PostDto } from "~~/shared/dto/post.dto";
+import { FILE_TYPE } from "~~/shared/constants";
+import type { PostDto } from "~~/shared/dto";
 
 interface FormState {
   coverImage: File | null;

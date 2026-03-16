@@ -1,7 +1,7 @@
 import { H3Event } from "h3";
 import type { ZodSchema } from "zod";
-import { BadRequestError } from "~~/shared/errors/bad-request.error";
-import type { FileMetadata } from "~~/shared/types/file.type";
+import { BadRequestError } from "~~/shared/errors";
+import type { FileMetadata } from "~~/shared/types";
 
 async function handleValidationResult<T>(
   validationFn: Promise<{ success: boolean; data?: T; error?: unknown }>,

@@ -1,4 +1,4 @@
-import type { GetCategoriesResponseDto } from "~~/shared/dto/category.dto";
+import type { GetCategoriesResponseDto } from "~~/shared/dto";
 import { categoryRepository } from "../repositories/category.repository";
 import { CategoryMapper } from "../utils/mappers/category.mapper";
 

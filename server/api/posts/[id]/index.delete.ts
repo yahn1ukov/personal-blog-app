@@ -1,4 +1,4 @@
-import { DeletePostParamsSchema } from "~~/shared/schemas/post.schema";
+import { DeletePostParamsSchema } from "~~/shared/schemas";
 import { postService } from "../../../services/post.service";
 import { defineProtectedController } from "../../../utils/http/auth/protected-controller";
 import { validateParams } from "../../../utils/http/validation";

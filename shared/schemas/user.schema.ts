@@ -12,4 +12,7 @@ export const UpdateUserPasswordBodySchema = z
     oldPassword: basePasswordField,
     newPassword: basePasswordField,
   })
-  .refine((data) => data.oldPassword !== data.newPassword);
+  .refine((data) => data.oldPassword !== data.newPassword, {
+    message: "New password must be different from the current password",
+    path: ["newPassword"],
+  });

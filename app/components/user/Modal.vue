@@ -3,7 +3,7 @@ import { USER_TAB_TYPE } from "@/utils/constants/user.constant";
 import { clearRequestError, type Result } from "@/utils/http/request-state";
 import type { Tab } from "@/utils/types/tab.type";
 import type { UserTabType } from "@/utils/types/user.type";
-import { FILE_TYPE } from "~~/shared/constants/file.constant";
+import { FILE_TYPE } from "~~/shared/constants";
 
 interface FormState {
   avatarImage: File | null;

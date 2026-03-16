@@ -1,4 +1,4 @@
-import type { GetPostsResponseDto, PostDto } from "~~/shared/dto/post.dto";
+import type { GetPostsResponseDto, PostDto } from "~~/shared/dto";
 import { formatImageURL } from "../formatters";
 import type { PostWithRelationsPayload } from "../types/post.type";
 

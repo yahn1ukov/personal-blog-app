@@ -1,4 +1,4 @@
-import { LoginBodySchema } from "~~/shared/schemas/auth.schema";
+import { LoginBodySchema } from "~~/shared/schemas";
 import { authService } from "../../services/auth.service";
 import { setAuthCookie } from "../../utils/http/auth/cookie";
 import { defineController } from "../../utils/http/controller";

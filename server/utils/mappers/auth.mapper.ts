@@ -1,4 +1,4 @@
-import type { GetAuthUserResponseDto } from "~~/shared/dto/auth.dto";
+import type { GetAuthUserResponseDto } from "~~/shared/dto";
 import { formatImageURL } from "../formatters";
 import type { UserPayload } from "../types/user.type";
 

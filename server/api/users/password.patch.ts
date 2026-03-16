@@ -1,4 +1,4 @@
-import { UpdateUserPasswordBodySchema } from "~~/shared/schemas/user.schema";
+import { UpdateUserPasswordBodySchema } from "~~/shared/schemas";
 import { userService } from "../../services/user.service";
 import { clearAuthCookie } from "../../utils/http/auth/cookie";
 import { defineProtectedController } from "../../utils/http/auth/protected-controller";

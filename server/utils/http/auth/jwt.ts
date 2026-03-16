@@ -1,6 +1,5 @@
 import * as jose from "jose";
-import { InvalidTokenError } from "~~/shared/errors/invalid-token.error";
-import { TokenExpiredError } from "~~/shared/errors/token-expired.error";
+import { UnauthorizedError } from "~~/shared/errors";
 import type { JwtPayload } from "../../types/auth.type";
 
 function getJwtSecret() {
@@ -33,13 +32,13 @@ export async function verifyToken(token: string): Promise<JwtPayload> {
     })
     .catch((error: unknown) => {
       if (error instanceof jose.errors.JWTExpired) {
-        throw new TokenExpiredError();
+        throw new UnauthorizedError("Token has expired");
       }
       if (error instanceof jose.errors.JWSInvalid || error instanceof jose.errors.JWTInvalid) {
-        throw new InvalidTokenError();
+        throw new UnauthorizedError("Invalid token");
       }
 
-      throw new InvalidTokenError();
+      throw new UnauthorizedError("Invalid token");
     });
 
   return {

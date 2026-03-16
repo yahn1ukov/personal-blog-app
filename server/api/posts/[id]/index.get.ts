@@ -1,4 +1,4 @@
-import { GetPostParamsSchema } from "~~/shared/schemas/post.schema";
+import { GetPostParamsSchema } from "~~/shared/schemas";
 import { postService } from "../../../services/post.service";
 import { defineController } from "../../../utils/http/controller";
 import { validateParams } from "../../../utils/http/validation";

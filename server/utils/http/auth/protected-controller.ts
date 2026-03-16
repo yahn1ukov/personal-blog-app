@@ -1,5 +1,5 @@
 import { type EventHandler, type EventHandlerRequest, getCookie } from "h3";
-import { UnauthorizedError } from "~~/shared/errors/unauthorized.error";
+import { UnauthorizedError } from "~~/shared/errors";
 import { defineController } from "../controller";
 import { getAuthCookieName } from "./cookie";
 import { verifyToken } from "./jwt";

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { FILE_TYPE } from "~~/shared/constants/file.constant";
-import type { FileType } from "~~/shared/types/file.type";
+import { FILE_TYPE } from "~~/shared/constants";
+import type { FileType } from "~~/shared/types";
 
 interface Props {
   id: string;

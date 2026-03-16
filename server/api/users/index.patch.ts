@@ -1,4 +1,4 @@
-import { UpdateUserBodySchema } from "~~/shared/schemas/user.schema";
+import { UpdateUserBodySchema } from "~~/shared/schemas";
 import { userService } from "../../services/user.service";
 import { defineProtectedController } from "../../utils/http/auth/protected-controller";
 import { validateMultipartFormData } from "../../utils/http/validation";

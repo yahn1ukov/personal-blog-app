@@ -1,4 +1,4 @@
-import { FILE_TYPE } from "~~/shared/constants/file.constant";
+import { FILE_TYPE } from "~~/shared/constants";
 import type {
   CreatePostRequestDto,
   DeletePostResponseDto,
@@ -7,7 +7,7 @@ import type {
   GetPostsResponseDto,
   UpdatePostRequestDto,
   UpdatePostResponseDto,
-} from "~~/shared/dto/post.dto";
+} from "~~/shared/dto";
 import { postRepository } from "../repositories/post.repository";
 import { formatSlug } from "../utils/formatters";
 import { PostMapper } from "../utils/mappers/post.mapper";
@@ -31,7 +31,7 @@ class PostService {
   }
 
   async getAll(dto: GetPostsQueryDto): Promise<GetPostsResponseDto> {
-    const { page = 1, limit = 10, categories } = dto;
+    const { page = 1, limit = 6, categories } = dto;
 
     const offset = (page - 1) * limit;
 

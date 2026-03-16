@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { CreatePostBodySchema } from "../schemas/post.schema";
-import type { FileMetadata } from "../types/file.type";
+import { CreatePostBodySchema, GetPostsQuerySchema } from "../schemas/post.schema";
+import type { FileMetadata } from "../types";
 import type { CategoryDto } from "./category.dto";
 import type { UserDto } from "./user.dto";
 
@@ -15,11 +15,7 @@ export interface PostDto {
   createdAt: Date;
 }
 
-export interface GetPostsQueryDto {
-  page?: number;
-  limit?: number;
-  categories?: string[];
-}
+export type GetPostsQueryDto = z.infer<typeof GetPostsQuerySchema>;
 
 export interface GetPostsResponseDto {
   totalPages: number;
@@ -39,6 +35,3 @@ export type UpdatePostRequestDto = Partial<CreatePostRequestDto>;
 export type UpdatePostResponseDto = PostDto;
 
 export type DeletePostResponseDto = Pick<PostDto, "id">;
-
-export type CreateUpdatePostRequestDto = Omit<CreatePostRequestDto, "coverImage" | "categories"> &
-  Omit<UpdatePostRequestDto, "coverImage" | "categories"> & { coverImage: File | null; categories: string[] };

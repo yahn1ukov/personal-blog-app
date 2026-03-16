@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { UpdateUserBodySchema, UpdateUserPasswordBodySchema } from "../schemas/user.schema";
-import type { FileMetadata } from "../types/file.type";
+import type { FileMetadata } from "../types";
 
 export interface UserDto {
   id: string;
@@ -8,7 +8,7 @@ export interface UserDto {
   lastName: string | null;
   username: string;
   avatarImageURL: string | null;
-  createdAt: string;
+  createdAt: Date;
 }
 
 export type UpdateUserRequestDto = z.infer<typeof UpdateUserBodySchema> & {
@@ -22,7 +22,3 @@ export type UpdatePasswordRequestDto = z.infer<typeof UpdateUserPasswordBodySche
 export type UpdatePasswordResponseDto = void;
 
 export type DeleteUserResponseDto = void;
-
-export type UpdateUserAndPasswordRequestDto = Omit<UpdateUserRequestDto, "avatarImage"> & {
-  avatarImage: File | null;
-} & UpdatePasswordRequestDto;

@@ -8,13 +8,13 @@ import type {
   GetPostsResponseDto,
   PostDto,
   UpdatePostResponseDto,
-} from "~~/shared/dto/post.dto";
+} from "~~/shared/dto";
 
 export const usePostStore = defineStore(PINIA_STORE_KEY.POST, () => {
   const posts = ref<PostDto[]>([]);
   const totalPages = ref(0);
   const post = ref<GetPostResponseDto | null>(null);
-  const query = ref<GetPostsQueryDto>({});
+  const query = ref<Partial<GetPostsQueryDto>>({});
   const state = reactive<RequestState>({
     isLoading: false,
     error: null,

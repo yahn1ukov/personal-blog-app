@@ -1,5 +1,5 @@
-import type { GetAuthUserResponseDto, LoginRequestDto, RegisterRequestDto } from "~~/shared/dto/auth.dto";
-import { UnauthorizedError } from "~~/shared/errors/unauthorized.error";
+import type { GetAuthUserResponseDto, LoginRequestDto, RegisterRequestDto } from "~~/shared/dto";
+import { UnauthorizedError } from "~~/shared/errors";
 import { userRepository } from "../repositories/user.repository";
 import { hashPassword, verifyPassword } from "../utils/http/auth/hash";
 import { generateToken } from "../utils/http/auth/jwt";

@@ -1,4 +1,4 @@
-import { UpdatePostBodySchema, UpdatePostParamsSchema } from "~~/shared/schemas/post.schema";
+import { UpdatePostBodySchema, UpdatePostParamsSchema } from "~~/shared/schemas";
 import { postService } from "../../../services/post.service";
 import { defineProtectedController } from "../../../utils/http/auth/protected-controller";
 import { validateMultipartFormData, validateParams } from "../../../utils/http/validation";

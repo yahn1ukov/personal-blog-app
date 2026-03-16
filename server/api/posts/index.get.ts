@@ -1,4 +1,4 @@
-import { GetPostsQuerySchema } from "~~/shared/schemas/post.schema";
+import { GetPostsQuerySchema } from "~~/shared/schemas";
 import { postService } from "../../services/post.service";
 import { defineController } from "../../utils/http/controller";
 import { validateQuery } from "../../utils/http/validation";

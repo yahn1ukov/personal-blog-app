@@ -7,7 +7,7 @@ import type {
   LogoutResponseDto,
   RegisterRequestDto,
   RegisterResponseDto,
-} from "~~/shared/dto/auth.dto";
+} from "~~/shared/dto";
 
 export const useAuthStore = defineStore(PINIA_STORE_KEY.AUTH, () => {
   const currentUser = ref<GetAuthUserResponseDto | null>(null);

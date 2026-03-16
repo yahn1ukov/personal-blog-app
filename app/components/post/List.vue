@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PostDto } from "~~/shared/dto/post.dto";
+import type { PostDto } from "~~/shared/dto";
 
 interface Props {
   posts: PostDto[];

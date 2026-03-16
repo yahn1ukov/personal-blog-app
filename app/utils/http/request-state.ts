@@ -1,5 +1,5 @@
 import type { FetchError } from "ofetch";
-import { BaseError } from "~~/shared/errors/base.error";
+import { BaseError } from "~~/shared/errors";
 
 export type Result<T> = { ok: true; data: T } | { ok: false; error: BaseError };
 

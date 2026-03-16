@@ -5,7 +5,7 @@ import type {
   UpdatePasswordRequestDto,
   UpdatePasswordResponseDto,
   UpdateUserResponseDto,
-} from "~~/shared/dto/user.dto";
+} from "~~/shared/dto";
 
 export const useUserStore = defineStore(PINIA_STORE_KEY.USER, () => {
   const authStore = useAuthStore();

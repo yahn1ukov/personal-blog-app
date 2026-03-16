@@ -1,4 +1,4 @@
-import type { CategoryDto } from "~~/shared/dto/category.dto";
+import type { CategoryDto } from "~~/shared/dto";
 import type { CategoryPayload } from "../types/category.type";
 
 export class CategoryMapper {

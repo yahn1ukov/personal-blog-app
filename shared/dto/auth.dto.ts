@@ -13,5 +13,3 @@ export type RegisterResponseDto = void;
 export type GetAuthUserResponseDto = Omit<UserDto, "id" | "createdAt">;
 
 export type LogoutResponseDto = void;
-
-export type LoginAndRegisterRequestDto = LoginRequestDto & RegisterRequestDto;

@@ -1,5 +1,5 @@
 import type { EventHandler, EventHandlerRequest } from "h3";
-import { BaseError } from "~~/shared/errors/base.error";
+import { BaseError } from "~~/shared/errors";
 
 export function defineController<T extends EventHandlerRequest, D>(handler: EventHandler<T, D>) {
   return defineEventHandler(async (event) => {

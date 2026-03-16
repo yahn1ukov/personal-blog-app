@@ -1,6 +1,6 @@
 import { PINIA_STORE_KEY } from "@/utils/constants/pinia.constant";
 import { withRequestState, type RequestState } from "@/utils/http/request-state";
-import type { GetCategoriesResponseDto } from "~~/shared/dto/category.dto";
+import type { GetCategoriesResponseDto } from "~~/shared/dto";
 
 export const useCategoryStore = defineStore(PINIA_STORE_KEY.CATEGORY, () => {
   const categories = ref<GetCategoriesResponseDto>([]);

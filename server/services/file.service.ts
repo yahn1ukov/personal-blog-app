@@ -1,6 +1,6 @@
-import { FILE_TYPE } from "~~/shared/constants/file.constant";
-import { InternalServerError } from "~~/shared/errors/internal-server.error";
-import type { FileMetadata, FileType } from "~~/shared/types/file.type";
+import { FILE_TYPE } from "~~/shared/constants";
+import { InternalServerError } from "~~/shared/errors";
+import type { FileMetadata, FileType } from "~~/shared/types";
 import { getS3Bucket, minioClient } from "../utils/minio";
 
 class FileService {
