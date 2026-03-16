@@ -22,12 +22,20 @@ class PostService {
     const coverImageURL = coverImage && (await fileService.upload(authorId, FILE_TYPE.COVER, coverImage));
     const transformedCategories = this.transformCategoriesToPayload(categories);
 
-    return postRepository.create(authorId, {
-      ...data,
-      slug,
-      coverImageURL,
-      categories: transformedCategories,
-    });
+    try {
+      return await postRepository.create(authorId, {
+        ...data,
+        slug,
+        coverImageURL,
+        categories: transformedCategories,
+      });
+    } catch (error: unknown) {
+      if (coverImageURL) {
+        await fileService.remove(coverImageURL).catch(() => {});
+      }
+
+      throw error;
+    }
   }
 
   async getAll(dto: GetPostsQueryDto): Promise<GetPostsResponseDto> {
@@ -54,14 +62,22 @@ class PostService {
     const coverImageURL = coverImage && (await fileService.upload(authorId, FILE_TYPE.COVER, coverImage));
     const transformedCategories = categories && this.transformCategoriesToPayload(categories);
 
-    const post = await postRepository.updateById(id, authorId, {
-      ...data,
-      slug,
-      coverImageURL,
-      categories: transformedCategories,
-    });
+    try {
+      const post = await postRepository.updateById(id, authorId, {
+        ...data,
+        slug,
+        coverImageURL,
+        categories: transformedCategories,
+      });
 
-    return PostMapper.toDto(post);
+      return PostMapper.toDto(post);
+    } catch (error: unknown) {
+      if (coverImageURL) {
+        await fileService.remove(coverImageURL).catch(() => {});
+      }
+
+      throw error;
+    }
   }
 
   async deleteById(id: string, authorId: string): Promise<DeletePostResponseDto> {

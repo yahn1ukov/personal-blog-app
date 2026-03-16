@@ -12,7 +12,7 @@ const PostParamsSchema = z.object({
 export const CreatePostBodySchema = z.object({
   title: postTitleField,
   content: postContentField,
-  categories: z.array(CreateCategoryBodySchema).min(1),
+  categories: z.array(CreateCategoryBodySchema).min(1, "At least one category is required"),
 });
 
 export const GetPostsQuerySchema = z.object({
@@ -38,7 +38,7 @@ export const UpdatePostParamsSchema = PostParamsSchema;
 export const UpdatePostBodySchema = z.object({
   title: postTitleField.optional(),
   content: postContentField.optional(),
-  categories: z.array(UpdateCategoryBodySchema).min(1).optional(),
+  categories: z.array(UpdateCategoryBodySchema).min(1, "At least one category is required").optional(),
 });
 
 export const DeletePostParamsSchema = PostParamsSchema;

@@ -1,5 +1,5 @@
 import * as jose from "jose";
-import { UnauthorizedError } from "~~/shared/errors";
+import { InternalServerError, UnauthorizedError } from "~~/shared/errors";
 import type { JwtPayload } from "../../types/auth.type";
 
 function getJwtSecret() {
@@ -19,7 +19,10 @@ export async function generateToken(userId: string) {
     .setExpirationTime(config.jwtExpiresIn)
     .setAudience(config.jwtAudience)
     .setIssuer(config.jwtIssuer)
-    .sign(getJwtSecret());
+    .sign(getJwtSecret())
+    .catch(() => {
+      throw new InternalServerError("Failed to generate token");
+    });
 }
 
 export async function verifyToken(token: string): Promise<JwtPayload> {
@@ -33,9 +36,6 @@ export async function verifyToken(token: string): Promise<JwtPayload> {
     .catch((error: unknown) => {
       if (error instanceof jose.errors.JWTExpired) {
         throw new UnauthorizedError("Token has expired");
-      }
-      if (error instanceof jose.errors.JWSInvalid || error instanceof jose.errors.JWTInvalid) {
-        throw new UnauthorizedError("Invalid token");
       }
 
       throw new UnauthorizedError("Invalid token");

@@ -11,10 +11,18 @@ class UserService {
 
     const avatarImageURL = avatarImage && (await fileService.upload(id, FILE_TYPE.AVATAR, avatarImage));
 
-    return userRepository.updateById(id, {
-      ...data,
-      avatarImageURL,
-    });
+    try {
+      return await userRepository.updateById(id, {
+        ...data,
+        avatarImageURL,
+      });
+    } catch (error: unknown) {
+      if (avatarImageURL) {
+        await fileService.remove(avatarImageURL).catch(() => {});
+      }
+
+      throw error;
+    }
   }
 
   async updatePasswordById(id: string, dto: UpdatePasswordRequestDto): Promise<void> {

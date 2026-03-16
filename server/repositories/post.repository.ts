@@ -30,19 +30,17 @@ class PostRepository {
     const { categories, ...data } = payload;
 
     await withPrismaErrorHandling("Post", () =>
-      prisma.$transaction(async (tx) => {
-        await tx.post.create({
-          data: {
-            ...data,
-            author: { connect: { id: authorId } },
-            categories: {
-              connectOrCreate: categories.map((category) => ({
-                where: { slug: category.slug },
-                create: category,
-              })),
-            },
+      prisma.post.create({
+        data: {
+          ...data,
+          author: { connect: { id: authorId } },
+          categories: {
+            connectOrCreate: categories.map((category) => ({
+              where: { slug: category.slug },
+              create: category,
+            })),
           },
-        });
+        },
       }),
     );
   }
@@ -84,24 +82,22 @@ class PostRepository {
     const { categories, ...data } = payload;
 
     return withPrismaErrorHandling("Post", () =>
-      prisma.$transaction(async (tx) =>
-        tx.post.update({
-          where: { id, authorId },
-          select: this.selectOptions,
-          data: {
-            ...data,
-            ...(categories && {
-              categories: {
-                set: [],
-                connectOrCreate: categories.map((category) => ({
-                  where: { slug: category.slug },
-                  create: category,
-                })),
-              },
-            }),
-          },
-        }),
-      ),
+      prisma.post.update({
+        where: { id, authorId },
+        select: this.selectOptions,
+        data: {
+          ...data,
+          ...(categories && {
+            categories: {
+              set: [],
+              connectOrCreate: categories.map((category) => ({
+                where: { slug: category.slug },
+                create: category,
+              })),
+            },
+          }),
+        },
+      }),
     );
   }
 
