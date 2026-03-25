@@ -100,7 +100,7 @@ function handleKeydown(event: KeyboardEvent) {
     />
 
     <div v-if="isOpen" class="absolute top-full left-0 right-0 z-10 mt-0.5 rounded-md border border-black bg-white">
-      <ul class="max-h-44 py-1">
+      <ul class="max-h-44 py-1 overflow-y-auto">
         <li
           v-for="option in filteredOptions"
           :key="option.value"
@@ -109,7 +109,9 @@ function handleKeydown(event: KeyboardEvent) {
           @click="toggle(option.value)"
         >
           <Icon v-if="isSelected(option.value)" name="lucide:check" class="shrink-0 size-4" />
-          <span :class="isSelected(option.value) ? 'font-medium' : 'pl-6'">{{ option.label }}</span>
+          <span class="break-words min-w-0" :class="isSelected(option.value) ? 'font-medium' : 'pl-6'">
+            {{ option.label }}
+          </span>
         </li>
 
         <li v-if="!filteredOptions.length" class="px-3 py-2 text-sm text-black/40 select-none">No options found</li>

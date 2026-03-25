@@ -5,12 +5,12 @@ export type Result<T> = { ok: true; data: T } | { ok: false; error: BaseError };
 
 export interface RequestState {
   isLoading: boolean;
-  error: BaseError | null;
+  error: { message: string } | null;
 }
 
-export async function withRequestState<T>(state: RequestState, fn: () => Promise<T>): Promise<Result<T>> {
-  state.isLoading = true;
-  state.error = null;
+export async function withRequestState<T>(state: Ref<RequestState>, fn: () => Promise<T>): Promise<Result<T>> {
+  state.value.isLoading = true;
+  state.value.error = null;
 
   try {
     const data = await fn();
@@ -20,15 +20,15 @@ export async function withRequestState<T>(state: RequestState, fn: () => Promise
     const fetchError = error as FetchError;
 
     const baseError = new BaseError(
-      fetchError.status ?? 500,
       fetchError.data?.message ?? fetchError.message ?? "Unexpected error",
+      fetchError.status ?? fetchError.statusCode ?? 500,
     );
 
-    state.error = baseError;
+    state.value.error = { message: baseError.message };
 
     return { ok: false, error: baseError };
   } finally {
-    state.isLoading = false;
+    state.value.isLoading = false;
   }
 }
 

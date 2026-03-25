@@ -10,7 +10,7 @@ import type {
 export const useUserStore = defineStore(PINIA_STORE_KEY.USER, () => {
   const authStore = useAuthStore();
 
-  const state = reactive<RequestState>({
+  const state = ref<RequestState>({
     isLoading: false,
     error: null,
   });

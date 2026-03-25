@@ -4,7 +4,7 @@ import type { GetCategoriesResponseDto } from "~~/shared/dto";
 
 export const useCategoryStore = defineStore(PINIA_STORE_KEY.CATEGORY, () => {
   const categories = ref<GetCategoriesResponseDto>([]);
-  const state = reactive<RequestState>({
+  const state = ref<RequestState>({
     isLoading: false,
     error: null,
   });

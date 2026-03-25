@@ -3,7 +3,9 @@ import { Prisma, PrismaClient } from "~~/prisma/generated/client";
 import { BadRequestError, ConflictError, InternalServerError, NotFoundError } from "~~/shared/errors";
 
 function prismaClientSingleton() {
-  const pool = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+  const config = useRuntimeConfig();
+
+  const pool = new PrismaPg({ connectionString: config.databaseURL });
 
   return new PrismaClient({ adapter: pool });
 }

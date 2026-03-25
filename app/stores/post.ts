@@ -15,7 +15,7 @@ export const usePostStore = defineStore(PINIA_STORE_KEY.POST, () => {
   const totalPages = ref(0);
   const post = ref<GetPostResponseDto | null>(null);
   const query = ref<Partial<GetPostsQueryDto>>({});
-  const state = reactive<RequestState>({
+  const state = ref<RequestState>({
     isLoading: false,
     error: null,
   });

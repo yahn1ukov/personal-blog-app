@@ -1,0 +1,15 @@
+.git
+
+node_modules
+
+.env
+.env.*
+
+.nuxt
+.output
+dist
+
+npm-debug.log*
+pnpm-debug.log*
+
+.vscode

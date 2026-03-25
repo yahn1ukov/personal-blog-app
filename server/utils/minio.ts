@@ -35,5 +35,5 @@ export function getS3URL() {
 
   const protocol = config.s3UseSSL ? "https" : "http";
 
-  return `${protocol}://${config.s3Endpoint}:${config.s3Port}/${config.s3Bucket}`;
+  return `${protocol}://${config.s3PublicEndpoint}:${config.s3Port}/${config.s3Bucket}`;
 }

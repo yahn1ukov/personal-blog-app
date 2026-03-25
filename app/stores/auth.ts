@@ -11,14 +11,14 @@ import type {
 
 export const useAuthStore = defineStore(PINIA_STORE_KEY.AUTH, () => {
   const currentUser = ref<GetAuthUserResponseDto | null>(null);
-  const state = reactive<RequestState>({
+  const state = ref<RequestState>({
     isLoading: false,
     error: null,
   });
 
   async function getCurrentUser() {
-    state.isLoading = true;
-    state.error = null;
+    state.value.isLoading = true;
+    state.value.error = null;
 
     try {
       const headers = import.meta.server ? (useRequestHeaders(["cookie"]) as HeadersInit) : undefined;
@@ -29,7 +29,7 @@ export const useAuthStore = defineStore(PINIA_STORE_KEY.AUTH, () => {
     } catch {
       currentUser.value = null;
     } finally {
-      state.isLoading = false;
+      state.value.isLoading = false;
     }
   }
 
